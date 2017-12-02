@@ -5,7 +5,10 @@ using Mercurial;
 using VCSVersion;
 using VCSVersion.Configuration;
 using VCSVersion.Helpers;
+using VCSVersion.SemanticVersions;
 using VCSVersion.VCS;
+using System.Linq;
+using HgVersion.Helpers;
 
 namespace HgVersion
 {
@@ -33,6 +36,12 @@ namespace HgVersion
         /// <inheritdoc />
         public IRepositoryMetadataProvider RepositoryMetadataProvider { get; }
 
+        /// <inheritdoc />
+        public bool IsCurrentCommitTagged { get; }
+
+        /// <inheritdoc />
+        public SemanticVersion CurrentCommitTaggedVersion { get; }
+
         /// <summary>
         /// Creates an instance of <see cref="HgVersionContext"/>
         /// </summary>
@@ -49,6 +58,8 @@ namespace HgVersion
             FullConfiguration = HgConfigurationProvider.Provide(preparer, FileSystem);
             RepositoryMetadataProvider = new HgRepositoryMetadataProvider(hg, FullConfiguration);
             Configuration = CalculateEffectiveConfiguration();
+            CurrentCommitTaggedVersion = CalculateCurrentCommitTaggedVersion();
+            IsCurrentCommitTagged = CurrentCommitTaggedVersion != null;
         }
 
         private EffectiveConfiguration CalculateEffectiveConfiguration()
@@ -74,8 +85,6 @@ namespace HgVersion
                 throw new Exception("Configuration value for 'AssemblyFileVersioningScheme' has no value. (this should not happen, please report an issue)");
             if (!FullConfiguration.CommitMessageIncrementing.HasValue)
                 throw new Exception("Configuration value for 'CommitMessageIncrementing' has no value. (this should not happen, please report an issue)");
-            if (!FullConfiguration.LegacySemVerPadding.HasValue)
-                throw new Exception("Configuration value for 'LegacySemVerPadding' has no value. (this should not happen, please report an issue)");
             if (!FullConfiguration.BuildMetaDataPadding.HasValue)
                 throw new Exception("Configuration value for 'BuildMetaDataPadding' has no value. (this should not happen, please report an issue)");
             if (!FullConfiguration.CommitsSinceVersionSourcePadding.HasValue)
@@ -110,13 +119,26 @@ namespace HgVersion
                 trackMergeTarget,
                 majorMessage, minorMessage, patchMessage, noBumpMessage,
                 commitMessageVersionBump,
-                FullConfiguration.LegacySemVerPadding.Value,
                 FullConfiguration.BuildMetaDataPadding.Value,
                 FullConfiguration.CommitsSinceVersionSourcePadding.Value,
                 FullConfiguration.Ignore.ToFilters(),
                 currentBranchConfig.TracksReleaseBranches.Value,
                 currentBranchConfig.IsReleaseBranch.Value,
                 commitDateFormat);
+        }
+
+        private SemanticVersion CalculateCurrentCommitTaggedVersion()
+        {
+            return CurrentCommit
+                .Tags
+                .SelectMany(tag =>
+                {
+                    if (SemanticVersion.TryParse(tag, Configuration.TagPrefix, out var version))
+                        return new[] { version };
+
+                    return new SemanticVersion[0];
+                })
+                .Max();
         }
     }
 }

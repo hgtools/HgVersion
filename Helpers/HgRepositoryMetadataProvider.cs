@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
+using HgVersion.VCS;
 using VCSVersion;
 using VCSVersion.Configuration;
 using VCSVersion.SemanticVersions;
 using VCSVersion.VCS;
 
-namespace HgVersion.VCS
+namespace HgVersion.Helpers
 {
     /// <inheritdoc />
     public sealed class HgRepositoryMetadataProvider : IRepositoryMetadataProvider

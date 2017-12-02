@@ -48,6 +48,9 @@
     <Compile Include="Configuration\HgPreparer.cs" />
     <Compile Include="HgVersionContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Templating\InvalidTemplatePathException.cs" />
+    <Compile Include="Templating\TemplateManager.cs" />
+    <Compile Include="Templating\TemplateType.cs" />
     <Compile Include="VCS\HgBranchHead.cs" />
     <Compile Include="VCS\HgCommit.cs" />
     <Compile Include="VCS\HgLogQuery.cs" />
@@ -56,6 +59,26 @@
     <Compile Include="VCS\HgRepository.cs" />
     <Compile Include="Helpers\HgRepositoryMetadataProvider.cs" />
     <Compile Include="VCS\HgTag.cs" />
+    <Compile Include="VersionAssemblyInfoResources\AssemblyInfoFileUpdater.cs" />
+    <Compile Include="VersionInformationResources\VersionInformationGenerator.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="VersionAssemblyInfoResources\AddFormats\VersionAssemblyInfo.cs" />
+    <EmbeddedResource Include="VersionAssemblyInfoResources\Templates\VersionAssemblyInfo.cs" />
+    <EmbeddedResource Include="VersionInformationResources\AddFormats\VersionInformation.cs" />
+    <EmbeddedResource Include="VersionInformationResources\Templates\VersionInformation.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="VersionAssemblyInfoResources\AddFormats\VersionAssemblyInfo.fs" />
+    <EmbeddedResource Include="VersionAssemblyInfoResources\Templates\VersionAssemblyInfo.fs" />
+    <EmbeddedResource Include="VersionInformationResources\AddFormats\VersionInformation.fs" />
+    <EmbeddedResource Include="VersionInformationResources\Templates\VersionInformation.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="VersionAssemblyInfoResources\AddFormats\VersionAssemblyInfo.vb" />
+    <EmbeddedResource Include="VersionAssemblyInfoResources\Templates\VersionAssemblyInfo.vb" />
+    <EmbeddedResource Include="VersionInformationResources\AddFormats\VersionInformation.vb" />
+    <EmbeddedResource Include="VersionInformationResources\Templates\VersionInformation.vb" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

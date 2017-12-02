@@ -78,7 +78,7 @@ namespace HgVersion.Configuration
             // Verify no branches are set to mainline mode
             if (readConfig.Branches.Any(b => b.Value.VersioningMode == VersioningMode.Mainline))
             {
-                throw new VCSVersionConfigurationException(@"Mainline mode only works at the repository level, a single branch cannot be put into mainline mode
+                throw new ConfigurationException(@"Mainline mode only works at the repository level, a single branch cannot be put into mainline mode
 
 This is because mainline mode treats your entire git repository as an event source with each merge into the 'mainline' incrementing the version.");
             }
@@ -97,7 +97,6 @@ This is because mainline mode treats your entire git repository as an event sour
             config.PatchVersionBumpMessage = config.PatchVersionBumpMessage ?? IncrementStrategy.DefaultPatchPattern;
             config.NoBumpMessage = config.NoBumpMessage ?? IncrementStrategy.DefaultNoBumpPattern;
             config.CommitMessageIncrementing = config.CommitMessageIncrementing ?? CommitMessageIncrementMode.Enabled;
-            config.LegacySemVerPadding = config.LegacySemVerPadding ?? 4;
             config.BuildMetaDataPadding = config.BuildMetaDataPadding ?? 4;
             config.CommitsSinceVersionSourcePadding = config.CommitsSinceVersionSourcePadding ?? 4;
             config.CommitDateFormat = config.CommitDateFormat ?? "yyyy-MM-dd";
@@ -163,13 +162,13 @@ This is because mainline mode treats your entire git repository as an event sour
                 var regex = branchConfig.Value.Regex;
                 if (regex == null)
                 {
-                    throw new VCSVersionConfigurationException($"Branch configuration '{branchConfig.Key}' is missing required configuration 'regex'");
+                    throw new ConfigurationException($"Branch configuration '{branchConfig.Key}' is missing required configuration 'regex'");
                 }
 
                 var sourceBranches = branchConfig.Value.SourceBranches;
                 if (sourceBranches == null)
                 {
-                    throw new VCSVersionConfigurationException($"Branch configuration '{branchConfig.Key}' is missing required configuration 'source-branches'");
+                    throw new ConfigurationException($"Branch configuration '{branchConfig.Key}' is missing required configuration 'source-branches'");
                 }
 
                 ApplyBranchDefaults(config, branchConfig.Value, regex, sourceBranches);
