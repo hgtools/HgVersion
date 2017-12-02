@@ -101,7 +101,7 @@ namespace HgVersion
             var assemblyVersioningScheme = FullConfiguration.AssemblyVersioningScheme.Value;
             var assemblyFileVersioningScheme = FullConfiguration.AssemblyFileVersioningScheme.Value;
             var assemblyInformationalFormat = FullConfiguration.AssemblyInformationalFormat;
-            var gitTagPrefix = FullConfiguration.TagPrefix;
+            var tagPrefix = FullConfiguration.TagPrefix;
             var majorMessage = FullConfiguration.MajorVersionBumpMessage;
             var minorMessage = FullConfiguration.MinorVersionBumpMessage;
             var patchMessage = FullConfiguration.PatchVersionBumpMessage;
@@ -111,7 +111,7 @@ namespace HgVersion
             var commitMessageVersionBump = currentBranchConfig.CommitMessageIncrementing ?? FullConfiguration.CommitMessageIncrementing.Value;
 
             return new EffectiveConfiguration(
-                assemblyVersioningScheme, assemblyFileVersioningScheme, assemblyInformationalFormat, versioningMode, gitTagPrefix,
+                assemblyVersioningScheme, assemblyFileVersioningScheme, assemblyInformationalFormat, versioningMode, tagPrefix,
                 tag, nextVersion, incrementStrategy,
                 currentBranchConfig.Regex,
                 preventIncrementForMergedBranchVersion,

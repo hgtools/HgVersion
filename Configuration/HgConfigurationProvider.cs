@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using VCSVersion.AssemblyVersioning;
 using VCSVersion.Configuration;
-using VCSVersion.Exceptions;
 using VCSVersion.Helpers;
 using VCSVersion.VersionCalculation;
 using VCSVersion.VersionCalculation.IncrementStrategies;
@@ -80,7 +79,7 @@ namespace HgVersion.Configuration
             {
                 throw new ConfigurationException(@"Mainline mode only works at the repository level, a single branch cannot be put into mainline mode
 
-This is because mainline mode treats your entire git repository as an event source with each merge into the 'mainline' incrementing the version.");
+This is because mainline mode treats your entire Mercurial repository as an event source with each merge into the 'mainline' incrementing the version.");
             }
         }
 
@@ -277,10 +276,9 @@ This is because mainline mode treats your entire git repository as an event sour
 
             bool hasConfigInWorkingDirectory = fileSystem.Exists(workingConfigFile);
             bool hasConfigInProjectRootDirectory = fileSystem.Exists(projectRootConfigFile);
+
             if (hasConfigInProjectRootDirectory && hasConfigInWorkingDirectory)
-            {
                 throw new WarningException($"Ambiguous config file selection from '{workingConfigFile}' and '{projectRootConfigFile}'");
-            }
         }
 
         private static string GetConfigFilePath(string workingDirectory, IFileSystem fileSystem)
