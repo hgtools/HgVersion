@@ -133,6 +133,12 @@ namespace HgVersion.Helpers
             }
         }
 
+        /// <inheritdoc />
+        public IMergeMessage ParseMergeMessage(string message)
+        {
+            return new HgMergeMessage(message, _configuration);
+        }
+
         private class MergeBaseData
         {
             public IBranchHead Branch { get; private set; }

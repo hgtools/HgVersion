@@ -57,9 +57,10 @@
     <Compile Include="VCS\HgCommit.cs" />
     <Compile Include="VCS\HgLogQuery.cs" />
     <Compile Include="VCS\HgLogQueryBuilder.cs" />
+    <Compile Include="VCS\HgMergeMessage.cs" />
     <Compile Include="VCS\HgNamedCommit.cs" />
     <Compile Include="VCS\HgRepository.cs" />
-    <Compile Include="Helpers\HgRepositoryMetadataProvider.cs" />
+    <Compile Include="VCS\HgRepositoryMetadataProvider.cs" />
     <Compile Include="VCS\HgTag.cs" />
     <Compile Include="VersionAssemblyInfoResources\AssemblyInfoFileUpdater.cs" />
     <Compile Include="VersionInformationResources\VersionInformationGenerator.cs" />
@@ -91,5 +92,6 @@
       <Name>VCSVersion</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

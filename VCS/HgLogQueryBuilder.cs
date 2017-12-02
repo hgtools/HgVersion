@@ -49,7 +49,7 @@ namespace HgVersion.VCS
         }
 
         /// <summary>
-        /// Creates a <see cref="HgLogQuery"/> that finds tipmost commit that belongs to the named branch.
+        /// Creates a <see cref="HgLogQuery"/> that finds commits that belong to the named branch.
         /// </summary>
         /// <param name="name">Branch name.</param>
         public HgLogQuery ByBranch(string name)
@@ -100,5 +100,9 @@ namespace HgVersion.VCS
         /// <inheritdoc />
         ILogQuery ILogQueryBuilder.Single(string hash) =>
             Single(hash);
+
+        /// <inheritdoc />
+        ILogQuery ILogQueryBuilder.ByBranch(string name) =>
+            ByBranch(name);
     }
 }
