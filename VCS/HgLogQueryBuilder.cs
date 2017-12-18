@@ -42,10 +42,7 @@ namespace HgVersion.VCS
             if (query == null)
                 throw new ArgumentNullException(nameof(query));
             
-            if (!(query is HgLogQuery hgQuery))
-                throw new InvalidOperationException($"{query.GetType()} is not supported.");
-
-            return RevSpec.AncestorsOf(hgQuery.Revision);
+            return RevSpec.AncestorsOf(query.Revision);
         }
 
         /// <summary>
@@ -72,16 +69,10 @@ namespace HgVersion.VCS
 
             if (query2 == null)
                 throw new ArgumentNullException(nameof(query2));
-
-            if (!(query1 is HgLogQuery hgQuery1))
-                throw new InvalidOperationException($"{query1.GetType()} is not supported.");
-
-            if (!(query2 is HgLogQuery hgQuery2))
-                throw new InvalidOperationException($"{query2.GetType()} is not supported.");
-
+            
             return RevSpec.CommonAncestorOf(
-                hgQuery1.Revision,
-                hgQuery2.Revision);
+                query1.Revision,
+                query2.Revision);
         }
 
         /// <summary>
