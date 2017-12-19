@@ -22,8 +22,8 @@ namespace HgVersion.Configuration
         public const string HotfixBranchRegex = "hotfix(es)?[/-]";
         public const string SupportBranchRegex = "support[/-]";
         public const string DevelopBranchRegex = "dev(elop)?(ment)?$";
-        public const string MasterBranchRegex = "master$";
-        public const string MasterBranchKey = "master";
+        public const string DefaultBranchRegex = "default$";
+        public const string DefaultBranchKey = "default";
         public const string ReleaseBranchKey = "release";
         public const string FeatureBranchKey = "feature";
         public const string PullRequestBranchKey = "pull-request";
@@ -112,8 +112,8 @@ This is because mainline mode treats your entire Mercurial repository as an even
                 defaultTrackMergeTarget: true,
                 tracksReleaseBranches: true);
             ApplyBranchDefaults(config,
-                GetOrCreateBranchDefaults(config, MasterBranchKey),
-                MasterBranchRegex,
+                GetOrCreateBranchDefaults(config, DefaultBranchKey),
+                DefaultBranchRegex,
                 new List<string> { DevelopBranchKey, ReleaseBranchKey },
                 defaultTag: string.Empty,
                 defaultPreventIncrement: true,
@@ -122,7 +122,7 @@ This is because mainline mode treats your entire Mercurial repository as an even
             ApplyBranchDefaults(config,
                 GetOrCreateBranchDefaults(config, ReleaseBranchKey),
                 ReleaseBranchRegex,
-                new List<string> { DevelopBranchKey, MasterBranchKey, SupportBranchKey, ReleaseBranchKey },
+                new List<string> { DevelopBranchKey, DefaultBranchKey, SupportBranchKey, ReleaseBranchKey },
                 defaultTag: "beta",
                 defaultPreventIncrement: true,
                 defaultIncrementStrategy: IncrementStrategyType.Patch,
@@ -130,25 +130,25 @@ This is because mainline mode treats your entire Mercurial repository as an even
             ApplyBranchDefaults(config,
                 GetOrCreateBranchDefaults(config, FeatureBranchKey),
                 FeatureBranchRegex,
-                new List<string> { DevelopBranchKey, MasterBranchKey, ReleaseBranchKey, FeatureBranchKey, SupportBranchKey, HotfixBranchKey },
+                new List<string> { DevelopBranchKey, DefaultBranchKey, ReleaseBranchKey, FeatureBranchKey, SupportBranchKey, HotfixBranchKey },
                 defaultIncrementStrategy: IncrementStrategyType.Inherit);
             ApplyBranchDefaults(config,
                 GetOrCreateBranchDefaults(config, PullRequestBranchKey),
                 PullRequestRegex,
-                new List<string> { DevelopBranchKey, MasterBranchKey, ReleaseBranchKey, FeatureBranchKey, SupportBranchKey, HotfixBranchKey },
+                new List<string> { DevelopBranchKey, DefaultBranchKey, ReleaseBranchKey, FeatureBranchKey, SupportBranchKey, HotfixBranchKey },
                 defaultTag: "PullRequest",
                 defaultTagNumberPattern: @"[/-](?<number>\d+)",
                 defaultIncrementStrategy: IncrementStrategyType.Inherit);
             ApplyBranchDefaults(config,
                 GetOrCreateBranchDefaults(config, HotfixBranchKey),
                 HotfixBranchRegex,
-                new List<string> { DevelopBranchKey, MasterBranchKey, SupportBranchKey },
+                new List<string> { DevelopBranchKey, DefaultBranchKey, SupportBranchKey },
                 defaultTag: "beta",
                 defaultIncrementStrategy: IncrementStrategyType.Patch);
             ApplyBranchDefaults(config,
                 GetOrCreateBranchDefaults(config, SupportBranchKey),
                 SupportBranchRegex,
-                new List<string> { MasterBranchKey },
+                new List<string> { DefaultBranchKey },
                 defaultTag: string.Empty,
                 defaultPreventIncrement: true,
                 defaultIncrementStrategy: IncrementStrategyType.Patch,

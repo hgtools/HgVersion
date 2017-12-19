@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\BranchConfigurationCalculator.cs" />
+    <Compile Include="Configuration\HgConfigrationException.cs" />
     <Compile Include="Configuration\HgConfigurationProvider.cs" />
     <Compile Include="Configuration\HgPreparer.cs" />
     <Compile Include="HgVersionContext.cs" />

@@ -67,28 +67,28 @@ namespace HgVersion
             var currentBranchConfig = BranchConfigurationCalculator.GetBranchConfiguration(this, CurrentBranch);
 
             if (!currentBranchConfig.VersioningMode.HasValue)
-                throw new Exception($"Configuration value for 'Versioning mode' for branch {currentBranchConfig.Name} has no value. (this should not happen, please report an issue)");
+                throw new HgConfigrationException($"Configuration value for 'Versioning mode' for branch {currentBranchConfig.Name} has no value. (this should not happen, please report an issue)");
             if (!currentBranchConfig.Increment.HasValue)
-                throw new Exception($"Configuration value for 'Increment' for branch {currentBranchConfig.Name} has no value. (this should not happen, please report an issue)");
+                throw new HgConfigrationException($"Configuration value for 'Increment' for branch {currentBranchConfig.Name} has no value. (this should not happen, please report an issue)");
             if (!currentBranchConfig.PreventIncrementOfMergedBranchVersion.HasValue)
-                throw new Exception($"Configuration value for 'PreventIncrementOfMergedBranchVersion' for branch {currentBranchConfig.Name} has no value. (this should not happen, please report an issue)");
+                throw new HgConfigrationException($"Configuration value for 'PreventIncrementOfMergedBranchVersion' for branch {currentBranchConfig.Name} has no value. (this should not happen, please report an issue)");
             if (!currentBranchConfig.TrackMergeTarget.HasValue)
-                throw new Exception($"Configuration value for 'TrackMergeTarget' for branch {currentBranchConfig.Name} has no value. (this should not happen, please report an issue)");
+                throw new HgConfigrationException($"Configuration value for 'TrackMergeTarget' for branch {currentBranchConfig.Name} has no value. (this should not happen, please report an issue)");
             if (!currentBranchConfig.TracksReleaseBranches.HasValue)
-                throw new Exception($"Configuration value for 'TracksReleaseBranches' for branch {currentBranchConfig.Name} has no value. (this should not happen, please report an issue)");
+                throw new HgConfigrationException($"Configuration value for 'TracksReleaseBranches' for branch {currentBranchConfig.Name} has no value. (this should not happen, please report an issue)");
             if (!currentBranchConfig.IsReleaseBranch.HasValue)
-                throw new Exception($"Configuration value for 'IsReleaseBranch' for branch {currentBranchConfig.Name} has no value. (this should not happen, please report an issue)");
+                throw new HgConfigrationException($"Configuration value for 'IsReleaseBranch' for branch {currentBranchConfig.Name} has no value. (this should not happen, please report an issue)");
 
             if (!FullConfiguration.AssemblyVersioningScheme.HasValue)
-                throw new Exception("Configuration value for 'AssemblyVersioningScheme' has no value. (this should not happen, please report an issue)");
+                throw new HgConfigrationException("Configuration value for 'AssemblyVersioningScheme' has no value. (this should not happen, please report an issue)");
             if (!FullConfiguration.AssemblyFileVersioningScheme.HasValue)
-                throw new Exception("Configuration value for 'AssemblyFileVersioningScheme' has no value. (this should not happen, please report an issue)");
+                throw new HgConfigrationException("Configuration value for 'AssemblyFileVersioningScheme' has no value. (this should not happen, please report an issue)");
             if (!FullConfiguration.CommitMessageIncrementing.HasValue)
-                throw new Exception("Configuration value for 'CommitMessageIncrementing' has no value. (this should not happen, please report an issue)");
+                throw new HgConfigrationException("Configuration value for 'CommitMessageIncrementing' has no value. (this should not happen, please report an issue)");
             if (!FullConfiguration.BuildMetaDataPadding.HasValue)
-                throw new Exception("Configuration value for 'BuildMetaDataPadding' has no value. (this should not happen, please report an issue)");
+                throw new HgConfigrationException("Configuration value for 'BuildMetaDataPadding' has no value. (this should not happen, please report an issue)");
             if (!FullConfiguration.CommitsSinceVersionSourcePadding.HasValue)
-                throw new Exception("Configuration value for 'CommitsSinceVersionSourcePadding' has no value. (this should not happen, please report an issue)");
+                throw new HgConfigrationException("Configuration value for 'CommitsSinceVersionSourcePadding' has no value. (this should not happen, please report an issue)");
 
             var versioningMode = currentBranchConfig.VersioningMode.Value;
             var tag = currentBranchConfig.Tag;

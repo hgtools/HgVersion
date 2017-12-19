@@ -22,7 +22,7 @@ namespace HgVersion.Configuration
             if (matchingBranches == null)
             {
                 Logger.WriteInfo(
-                    $"No branch configuration found for branch {targetBranch.Name}, "
+                    $"No branch configuration found for branch '{targetBranch.Name}', "
                     + "falling back to default configuration");
 
                 matchingBranches = new BranchConfig {Name = string.Empty};
@@ -96,7 +96,7 @@ namespace HgVersion.Configuration
                 }
 
                 // If we fail to inherit it is probably because the branch has been merged and we can't do much. So we will fall back to develop's config
-                // if develop exists and master if not
+                // if develop exists and default if not
                 string errorMessage;
                 if (possibleParents.Count == 0)
                     errorMessage = "Failed to inherit Increment branch configuration, no branches found.";
@@ -105,11 +105,12 @@ namespace HgVersion.Configuration
                                    string.Join(", ", possibleParents.Select(p => p.Name));
 
                 var developBranchRegex = config.Branches[HgConfigurationProvider.DevelopBranchKey].Regex;
-                var masterBranchRegex = config.Branches[HgConfigurationProvider.MasterBranchKey].Regex;
+                var defaultBranchRegex = config.Branches[HgConfigurationProvider.DefaultBranchKey].Regex;
 
                 var chosenBranch = repository.Branches()
-                    .FirstOrDefault(b => Regex.IsMatch(b.Name, developBranchRegex, RegexOptions.IgnoreCase)
-                                         || Regex.IsMatch(b.Name, masterBranchRegex, RegexOptions.IgnoreCase));
+                    .FirstOrDefault(b => 
+                        Regex.IsMatch(b.Name, developBranchRegex, RegexOptions.IgnoreCase) || 
+                        Regex.IsMatch(b.Name, defaultBranchRegex, RegexOptions.IgnoreCase));
 
                 if (chosenBranch == null)
                 {
@@ -117,7 +118,7 @@ namespace HgVersion.Configuration
                     // for fetch issues and we could give better warnings.
                     throw new InvalidOperationException(
                         $"Could not find a '{HgConfigurationProvider.DevelopBranchKey}' or "
-                        + $"'{HgConfigurationProvider.MasterBranchKey}' branch, neither locally nor remotely.");
+                        + $"'{HgConfigurationProvider.DefaultBranchKey}' branch, neither locally nor remotely.");
                 }
 
                 var branchName = chosenBranch.Name;
@@ -203,7 +204,7 @@ namespace HgVersion.Configuration
             }
             else if (branches.Count > 1)
             {
-                currentBranch = branches.FirstOrDefault(b => b.Name == HgConfigurationProvider.MasterBranchKey) ?? branches.First();
+                currentBranch = branches.FirstOrDefault(b => b.Name == HgConfigurationProvider.DefaultBranchKey) ?? branches.First();
             }
             else
             {
@@ -213,7 +214,7 @@ namespace HgVersion.Configuration
 
                 if (possibleTargetBranches.Count > 1)
                 {
-                    currentBranch = possibleTargetBranches.FirstOrDefault(b => b.Name == HgConfigurationProvider.MasterBranchKey) ??
+                    currentBranch = possibleTargetBranches.FirstOrDefault(b => b.Name == HgConfigurationProvider.DefaultBranchKey) ??
                                     possibleTargetBranches.First();
                 }
                 else
