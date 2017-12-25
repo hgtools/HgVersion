@@ -6,6 +6,7 @@ using System.Text;
 using VCSVersion.AssemblyVersioning;
 using VCSVersion.Configuration;
 using VCSVersion.Helpers;
+using VCSVersion.VCS;
 using VCSVersion.VersionCalculation;
 using VCSVersion.VersionCalculation.IncrementStrategies;
 
@@ -33,10 +34,10 @@ namespace HgVersion.Configuration
 
         private const IncrementStrategyType DefaultIncrementStrategy = IncrementStrategyType.Inherit;
 
-        public static Config Provide(HgPreparer preparer, IFileSystem fileSystem, bool applyDefaults = true, Config overrideConfig = null)
+        public static Config Provide(IRepository repository, IFileSystem fileSystem, bool applyDefaults = true, Config overrideConfig = null)
         {
-            var workingDirectory = preparer.WorkingDirectory;
-            var projectRootDirectory = preparer.ProjectRootDirectory;
+            var workingDirectory = repository.Path;
+            var projectRootDirectory = GetProjectRootDirectory(workingDirectory);
 
             if (HasConfigFileAt(workingDirectory, fileSystem))
             {
@@ -44,19 +45,6 @@ namespace HgVersion.Configuration
             }
 
             return Provide(projectRootDirectory, fileSystem, applyDefaults, overrideConfig);
-        }
-
-        public string SelectConfigFilePath(HgPreparer preparer, IFileSystem fileSystem)
-        {
-            var workingDirectory = preparer.WorkingDirectory;
-            var projectRootDirectory = preparer.ProjectRootDirectory;
-
-            if (HasConfigFileAt(workingDirectory, fileSystem))
-            {
-                return GetConfigFilePath(workingDirectory, fileSystem);
-            }
-
-            return GetConfigFilePath(projectRootDirectory, fileSystem);
         }
 
         public static Config Provide(string workingDirectory, IFileSystem fileSystem, bool applyDefaults = true, Config overrideConfig = null)
@@ -70,6 +58,31 @@ namespace HgVersion.Configuration
                 ApplyOverridesTo(readConfig, overrideConfig);
 
             return readConfig;
+        }
+        
+        private static string GetProjectRootDirectory(string workingDirectory)
+        {
+            var dotHgDirectory = GetDotHgDirectory(workingDirectory);
+            var directoryInfo = Directory.GetParent(dotHgDirectory);
+            
+            return directoryInfo.FullName;
+        }
+
+        private static string GetDotHgDirectory(string workingDirectory)
+        {
+            var directories = Directory.GetDirectories(workingDirectory, ".hg");
+
+            if (directories.Length == 0)
+                throw new DirectoryNotFoundException("Can not find the .hg directory in " + workingDirectory);
+
+            if (directories.Length > 1)
+            {
+                return directories
+                    .OrderBy(dir => dir.Length)
+                    .First();
+            }
+
+            return directories.First();
         }
 
         private static void VerifyConfiguration(Config readConfig)
@@ -251,34 +264,6 @@ This is because mainline mode treats your entire Mercurial repository as an even
                 stream.Flush();
             }
             return stringBuilder.ToString();
-        }
-
-        public static void Verify(HgPreparer preparer, IFileSystem fileSystem)
-        {
-            var workingDirectory = preparer.WorkingDirectory;
-            var projectRootDirectory = preparer.ProjectRootDirectory;
-
-            Verify(workingDirectory, projectRootDirectory, fileSystem);
-        }
-
-        public static void Verify(string workingDirectory, string projectRootDirectory, IFileSystem fileSystem)
-        {
-            if (fileSystem.PathsEqual(workingDirectory, projectRootDirectory))
-                return;
-
-            WarnAboutAmbiguousConfigFileSelection(workingDirectory, projectRootDirectory, fileSystem);
-        }
-
-        private static void WarnAboutAmbiguousConfigFileSelection(string workingDirectory, string projectRootDirectory, IFileSystem fileSystem)
-        {
-            var workingConfigFile = GetConfigFilePath(workingDirectory, fileSystem);
-            var projectRootConfigFile = GetConfigFilePath(projectRootDirectory, fileSystem);
-
-            bool hasConfigInWorkingDirectory = fileSystem.Exists(workingConfigFile);
-            bool hasConfigInProjectRootDirectory = fileSystem.Exists(projectRootConfigFile);
-
-            if (hasConfigInProjectRootDirectory && hasConfigInWorkingDirectory)
-                throw new WarningException($"Ambiguous config file selection from '{workingConfigFile}' and '{projectRootConfigFile}'");
         }
 
         private static string GetConfigFilePath(string workingDirectory, IFileSystem fileSystem)

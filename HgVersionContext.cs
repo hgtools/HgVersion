@@ -51,13 +51,13 @@ namespace HgVersion
             CurrentBranch = repository.CurrentBranch();
             CurrentCommit = repository.CurrentCommit();
             FileSystem = new FileSystem();
-            FullConfiguration = HgConfigurationProvider.Provide(new HgPreparer(repository.Path), FileSystem);
+            FullConfiguration = HgConfigurationProvider.Provide(repository, FileSystem);
             RepositoryMetadataProvider = new HgRepositoryMetadataProvider(repository, FullConfiguration);
             Configuration = CalculateEffectiveConfiguration();
             CurrentCommitTaggedVersion = CalculateCurrentCommitTaggedVersion();
             IsCurrentCommitTagged = CurrentCommitTaggedVersion != null;
         }
-
+        
         private EffectiveConfiguration CalculateEffectiveConfiguration()
         {
             var currentBranchConfig = BranchConfigurationCalculator.GetBranchConfiguration(this, CurrentBranch);
