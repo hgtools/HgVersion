@@ -1,27 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using HgVersion.VCS;
 using VCSVersion;
 using VCSVersion.Configuration;
 using VCSVersion.SemanticVersions;
 using VCSVersion.VCS;
 
-namespace HgVersion.Helpers
+namespace HgVersion.VCS
 {
     /// <inheritdoc />
     public sealed class HgRepositoryMetadataProvider : IRepositoryMetadataProvider
     {
-        private Dictionary<IBranchHead, List<IBranchHead>> _mergeBaseCommitsCache;
         private Dictionary<Tuple<IBranchHead, IBranchHead>, MergeBaseData> _mergeBaseCache;
         private Dictionary<IBranchHead, List<SemanticVersion>> _semanticVersionTagsOnBranchCache;
-        private HgRepository _repository;
+        private IHgRepository _repository;
         private Config _configuration;
 
-        public HgRepositoryMetadataProvider(HgRepository repository, Config configuration)
+        public HgRepositoryMetadataProvider(IHgRepository repository, Config configuration)
         {
             _mergeBaseCache = new Dictionary<Tuple<IBranchHead, IBranchHead>, MergeBaseData>();
-            _mergeBaseCommitsCache = new Dictionary<IBranchHead, List<IBranchHead>>();
             _semanticVersionTagsOnBranchCache = new Dictionary<IBranchHead, List<SemanticVersion>>();
             _repository = repository;
             _configuration = configuration;
@@ -141,10 +138,10 @@ namespace HgVersion.Helpers
 
         private class MergeBaseData
         {
-            public IBranchHead Branch { get; private set; }
-            public IBranchHead OtherBranch { get; private set; }
-            public IRepository Repository { get; private set; }
-            public ICommit MergeBase { get; private set; }
+            public IBranchHead Branch { get; }
+            public IBranchHead OtherBranch { get; }
+            public IRepository Repository { get; }
+            public ICommit MergeBase { get; }
 
             public MergeBaseData(IBranchHead branch, IBranchHead otherBranch, IRepository repository, ICommit mergeBase)
             {

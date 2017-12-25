@@ -8,7 +8,6 @@ using VCSVersion.Helpers;
 using VCSVersion.SemanticVersions;
 using VCSVersion.VCS;
 using System.Linq;
-using HgVersion.Helpers;
 
 namespace HgVersion
 {
@@ -45,18 +44,15 @@ namespace HgVersion
         /// <summary>
         /// Creates an instance of <see cref="HgVersionContext"/>
         /// </summary>
-        /// <param name="repository">Mercurial.Net <see cref="Mercurial.Repository"/></param>
-        public HgVersionContext(Repository repository)
+        /// <param name="repository">Mercurial retpository</param>
+        public HgVersionContext(IHgRepository repository)
         {
-            var preparer = new HgPreparer(repository.Path);
-            var hg = new HgRepository(repository);
-
-            Repository = hg;
-            CurrentBranch = hg.CurrentBranch();
-            CurrentCommit = hg.CurrentCommit();
+            Repository = repository;
+            CurrentBranch = repository.CurrentBranch();
+            CurrentCommit = repository.CurrentCommit();
             FileSystem = new FileSystem();
-            FullConfiguration = HgConfigurationProvider.Provide(preparer, FileSystem);
-            RepositoryMetadataProvider = new HgRepositoryMetadataProvider(hg, FullConfiguration);
+            FullConfiguration = HgConfigurationProvider.Provide(new HgPreparer(repository.Path), FileSystem);
+            RepositoryMetadataProvider = new HgRepositoryMetadataProvider(repository, FullConfiguration);
             Configuration = CalculateEffectiveConfiguration();
             CurrentCommitTaggedVersion = CalculateCurrentCommitTaggedVersion();
             IsCurrentCommitTagged = CurrentCommitTaggedVersion != null;

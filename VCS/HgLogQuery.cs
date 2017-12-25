@@ -44,7 +44,6 @@ namespace HgVersion.VCS
         /// Gets a <see cref="HgLogQuery"/> that selects commits witch does not belong to excluded branches.
         /// </summary>
         /// <param name="excludedBranches">Branches for exclusion from the result set.</param>
-        /// <returns></returns>
         public HgLogQuery Except(params string[] excludedBranches)
         {
             var revision = new RevSpec(Revision);
@@ -57,6 +56,24 @@ namespace HgVersion.VCS
         }
 
         /// <summary>
+        /// Gets a <see cref="HgLogQuery"/> that selects commits witch are not only tagging commits.
+        /// </summary>
+        public HgLogQuery ExceptTaggingCommits()
+        {
+            return Revision.Except(
+                RevSpec.Affects(".hgtags") &
+                !RevSpec.Tagged());
+        }
+
+        /// <summary>
+        /// Get a <see cref="HgLogQuery"/> that selects last commit.
+        /// </summary>
+        public HgLogQuery Last()
+        {
+            return new RevSpec($"last({Revision})");
+        }
+
+        /// <summary>
         /// Converts a <see cref="RevSpec"/> into a <see cref="HgLogQuery"/> 
         /// </summary>
         /// <param name="revision">Specifies a set of revisions</param>
@@ -66,5 +83,11 @@ namespace HgVersion.VCS
         /// <inheritdoc />
         ILogQuery ILogQuery.Limit(int amount) =>
             Limit(amount);
+
+        /// <inheritdoc />
+        public override string ToString()
+        {
+            return Revision.ToString();
+        }
     }
 }

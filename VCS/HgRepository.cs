@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using Mercurial;
+using VCSVersion;
 using VCSVersion.VCS;
 
 namespace HgVersion.VCS
 {
     /// <inheritdoc />
-    public sealed class HgRepository : IRepository
+    public sealed class HgRepository : IHgRepository
     {
         private readonly Repository _repository;
 
@@ -78,7 +79,12 @@ namespace HgVersion.VCS
         public ICommit CurrentCommit()
         {
             var id = _repository.Identify();
-            return GetCommit(id);
+            var revision = new HgLogQuery(RevSpec.To(id))
+                .ExceptTaggingCommits()
+                .Last()
+                .Revision;
+            
+            return GetCommit(revision);
         }
 
         /// <inheritdoc />
@@ -143,16 +149,9 @@ namespace HgVersion.VCS
             return _repository.Parents(command)
                 .Select(changeset => (HgCommit) changeset);
         }
-
-        /// <summary>
-        /// Converts a <see cref="Repository"/> into a <see cref="HgRepository"/>
-        /// </summary>
-        /// <param name="repository">Mercurial.Net <see cref="Repository"/></param>
-        /// <returns></returns>
-        public static implicit operator HgRepository(Repository repository) =>
-            new HgRepository(repository);
         
-        private ICommit GetCommit(int revisionNumber)
+        /// <inheritdoc />
+        public ICommit GetCommit(int revisionNumber)
         {
             var id = _repository.Identify(new IdentifyCommand()
                 .WithAdditionalArgument($"--rev {revisionNumber}"));
@@ -160,7 +159,8 @@ namespace HgVersion.VCS
             return GetCommit(id);
         }
 
-        private ICommit GetCommit(RevSpec revision)
+        /// <inheritdoc />
+        public ICommit GetCommit(RevSpec revision)
         {
             var log = _repository.Log(new LogCommand()
                 .WithRevision(revision)
@@ -169,12 +169,33 @@ namespace HgVersion.VCS
             return (HgCommit) log.First();
         }
 
-        private ICommit GetBranchHead(string branchName)
+        /// <inheritdoc />
+        public ICommit GetBranchHead(string branchName)
         {
             var heads = _repository.Heads(new HeadsCommand()
                 .WithBranchRevision(RevSpec.ByBranch(branchName)));
 
             return (HgCommit) heads.First();
         }
+
+        /// <inheritdoc />
+        public void Branch(string branch)
+        {
+            _repository.Branch(branch);
+        }
+
+        /// <inheritdoc />
+        public void Update(RevSpec rev)
+        {
+            _repository.Update(rev);
+        }
+
+        /// <summary>
+        /// Converts a <see cref="Repository"/> into a <see cref="HgRepository"/>
+        /// </summary>
+        /// <param name="repository">Mercurial.Net <see cref="Repository"/></param>
+        /// <returns></returns>
+        public static implicit operator HgRepository(Repository repository) =>
+            new HgRepository(repository);
     }
 }

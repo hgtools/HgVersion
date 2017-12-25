@@ -30,7 +30,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Mercurial.Net">
+    <Reference Include="Mercurial.Net, Version=1.1.1.607, Culture=neutral, PublicKeyToken=9e2fabf3af85dba9">
       <HintPath>..\packages\Mercurial.Net.1.1.1.607\lib\net35-Client\Mercurial.Net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -40,11 +40,11 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="VCSVersion, Version=0.1.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\VCSVersion.0.1.1-beta0001\lib\net461\VCSVersion.dll</HintPath>
+    <Reference Include="VCSVersion, Version=0.1.2.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\VCSVersion.0.1.2\lib\net461\VCSVersion.dll</HintPath>
     </Reference>
-    <Reference Include="YamlDotNet, Version=4.2.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\YamlDotNet.4.2.2\lib\net35\YamlDotNet.dll</HintPath>
+    <Reference Include="YamlDotNet, Version=4.2.3.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\YamlDotNet.4.2.3\lib\net35\YamlDotNet.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -66,6 +66,7 @@
     <Compile Include="VCS\HgRepository.cs" />
     <Compile Include="VCS\HgRepositoryMetadataProvider.cs" />
     <Compile Include="VCS\HgTag.cs" />
+    <Compile Include="VCS\IHgRepository.cs" />
     <Compile Include="VersionAssemblyInfoResources\AssemblyInfoFileUpdater.cs" />
     <Compile Include="VersionInformationResources\VersionInformationGenerator.cs" />
   </ItemGroup>
@@ -90,6 +91,5 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

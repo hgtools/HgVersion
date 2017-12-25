@@ -76,6 +76,19 @@ namespace HgVersion.VCS
         }
 
         /// <summary>
+        /// Create a <see cref="HgLogQuery" /> that includes a range
+        /// of commits between <paramref name="fromHash"/> and <paramref name="toHash"/>.
+        /// </summary>
+        /// <param name="fromHash">Hash of first commit to include.</param>
+        /// <param name="toHash">Hash of last commit to include.</param>
+        public HgLogQuery Range(string fromHash, string toHash)
+        {
+            return RevSpec.Range(
+                RevSpec.Single(fromHash), 
+                RevSpec.Single(toHash));
+        }
+
+        /// <summary>
         /// Creates a <see cref="HgLogQuery"/> that finds tagged commits that belongs to the named branch.
         /// </summary>
         /// <param name="name">Branch name.</param>
@@ -86,14 +99,19 @@ namespace HgVersion.VCS
 
         /// <inheritdoc />
         ILogQuery ILogQueryBuilder.AncestorsOf(string hash) =>
-            AncestorsOf(hash);
+            AncestorsOf(hash).ExceptTaggingCommits();
 
         /// <inheritdoc />
         ILogQuery ILogQueryBuilder.Single(string hash) =>
-            Single(hash);
+            Single(hash).ExceptTaggingCommits();
 
         /// <inheritdoc />
         ILogQuery ILogQueryBuilder.ByBranch(string name) =>
-            ByBranch(name);
+            ByBranch(name).ExceptTaggingCommits();
+        
+        /// <inheritdoc />
+        ILogQuery ILogQueryBuilder.Range(string fromHash, string toHash) =>
+            Range(fromHash, toHash).ExceptTaggingCommits();
+        
     }
 }
