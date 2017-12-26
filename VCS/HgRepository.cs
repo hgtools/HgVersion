@@ -42,7 +42,8 @@ namespace HgVersion.VCS
                 throw new InvalidOperationException($"{query.GetType()} is not supported.");
 
             return _repository
-                .Log(hgQuery.Revision)
+                .Log(new LogCommand()
+                    .WithRevision(hgQuery.Revision))
                 .Select(changeset => (HgCommit) changeset);
         }
 
@@ -154,7 +155,7 @@ namespace HgVersion.VCS
         public ICommit GetCommit(int revisionNumber)
         {
             var id = _repository.Identify(new IdentifyCommand()
-                .WithAdditionalArgument($"--rev {revisionNumber}"));
+                .WithRevision(revisionNumber));
 
             return GetCommit(id);
         }
@@ -162,11 +163,10 @@ namespace HgVersion.VCS
         /// <inheritdoc />
         public ICommit GetCommit(RevSpec revision)
         {
-            var log = _repository.Log(new LogCommand()
-                .WithRevision(revision)
-                .WithAdditionalArgument("--limit 1"));
+            var query = new HgLogQuery(revision)
+                .Last();
 
-            return (HgCommit) log.First();
+            return (HgCommit) Log(query).First();
         }
 
         /// <inheritdoc />
