@@ -44,8 +44,8 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="VCSVersion, Version=0.1.2.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\VCSVersion.0.1.2\lib\net461\VCSVersion.dll</HintPath>
+    <Reference Include="VCSVersion, Version=0.1.3.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\VCSVersion.0.1.3\lib\net461\VCSVersion.dll</HintPath>
     </Reference>
     <Reference Include="YamlDotNet, Version=4.2.3.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\packages\YamlDotNet.4.2.3\lib\net35\YamlDotNet.dll</HintPath>
