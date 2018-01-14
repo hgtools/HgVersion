@@ -185,11 +185,7 @@ namespace HgVersionTests.VersionAssemblyInfoResources
         [TestCase("vb", "<Assembly: AssemblyVersion(\"1.0.0.0\")>\r\n<Assembly: AssemblyFileVersion(\"1.0.0.0\")>")]
         public void ShouldAddAssemblyInformationalVersionWhenUpdatingAssemblyVersionFile(string fileExtension, string assemblyFileContent)
         {
-            var workingDir = Path.GetTempPath();
-            var assemblyInfoFile = "AssemblyInfo." + fileExtension;
-            var fileName = Path.Combine(workingDir, assemblyInfoFile);
-
-            VerifyAssemblyInfoFile(assemblyFileContent, assemblyInfoFile,
+            VerifyAssemblyInfoFile(assemblyFileContent, "AssemblyInfo." + fileExtension,
                 verify: content => content.ShouldMatchApproved(c => c
                     .NoDiff()
                     .LocateTestMethodUsingAttribute<TestCaseAttribute>()
@@ -202,11 +198,7 @@ namespace HgVersionTests.VersionAssemblyInfoResources
         [TestCase("vb", "<Assembly: AssemblyFileVersion(\"1.0.0.0\")>")]
         public void ShouldNotAddAssemblyInformationalVersionWhenUpdatingAssemblyVersionFileWhenVersionSchemeIsNone(string fileExtension, string assemblyFileContent)
         {
-            var workingDir = Path.GetTempPath();
-            var assemblyInfoFile = "AssemblyInfo." + fileExtension;
-            var fileName = Path.Combine(workingDir, assemblyInfoFile);
-
-            VerifyAssemblyInfoFile(assemblyFileContent, assemblyInfoFile, AssemblyVersioningScheme.None,
+            VerifyAssemblyInfoFile(assemblyFileContent, "AssemblyInfo." + fileExtension, AssemblyVersioningScheme.None,
                 verify: content => content.ShouldMatchApproved(c => c
                     .NoDiff()
                     .LocateTestMethodUsingAttribute<TestCaseAttribute>()
@@ -370,8 +362,7 @@ namespace HgVersionTests.VersionAssemblyInfoResources
                 using (var assemblyInfoFileUpdater = new AssemblyInfoFileUpdater(assemblyInfoFile, workingDir, variables, mock.Object, false))
                 {
                     assemblyInfoFileUpdater.Update();
-
-                    verify(mock.Object.ReadAllText(fileName));
+                    verify?.Invoke(mock.Object.ReadAllText(fileName));
                 }
             });
         }
@@ -429,7 +420,7 @@ namespace HgVersionTests.VersionAssemblyInfoResources
             var config = new TestEffectiveConfiguration(assemblyVersioningScheme: versioningScheme);
             var variables = version.ToVersionVariables(config);
 
-            verify(fileSystem, variables);
+            verify?.Invoke(fileSystem, variables);
         }
     }
 }

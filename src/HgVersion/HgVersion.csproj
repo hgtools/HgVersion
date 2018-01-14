@@ -23,4 +23,10 @@
     <Compile Remove="VersionInformationResources\AddFormats\**" />
     <Compile Remove="VersionInformationResources\Templates\**" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="VersionAssemblyInfoResources\AddFormats\**" />
+    <EmbeddedResource Include="VersionAssemblyInfoResources\Templates\**" />
+    <EmbeddedResource Include="VersionInformationResources\AddFormats\**" />
+    <EmbeddedResource Include="VersionInformationResources\Templates\**" />
+  </ItemGroup>
 </Project>
