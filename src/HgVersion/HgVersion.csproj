@@ -12,31 +12,9 @@
     <PackageTags>cake mercurial semver</PackageTags>
     <NoWarn>1591</NoWarn>
   </PropertyGroup>
-  <Choose>
-    <When Condition="'$(Configuration)' == 'Debug' AND Exists('..\Hg.Net')">
-      <ItemGroup>
-        <ProjectReference Include="..\Hg.Net\src\Mercurial.Net\Mercurial.Net.csproj" />
-      </ItemGroup>
-    </When>
-    <Otherwise>
-      <ItemGroup>
-        <PackageReference Include="Hg.Net" Version="0.1.5" />
-      </ItemGroup>
-    </Otherwise>
-  </Choose>
-  <Choose>
-    <When Condition="'$(Configuration)' == 'Debug' AND Exists('..\VCSVersion')">
-      <ItemGroup>
-        <ProjectReference Include="..\VCSVersion\src\VCSVersion\VCSVersion.csproj" />
-      </ItemGroup>
-    </When>
-    <Otherwise>
-      <ItemGroup>
-        <PackageReference Include="VCSVersion" Version="0.1.5" />
-      </ItemGroup>
-    </Otherwise>
-  </Choose>
   <ItemGroup>
+    <PackageReference Include="Hg.Net" Version="0.1.5" />
+    <PackageReference Include="VCSVersion" Version="0.1.5" />
     <PackageReference Include="YamlDotNet" Version="4.2.3" />
   </ItemGroup>
   <ItemGroup>

@@ -1,9 +1,5 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VCSVersion", "VCSVersion\src\VCSVersion\VCSVersion.csproj", "{CCCEC81E-F21E-4B58-A026-2648FD6D2D5B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mercurial.Net", "Hg.Net\src\Mercurial.Net\Mercurial.Net.csproj", "{536B722B-DE28-48FC-ABAF-12B4B9FFB44A}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HgVersion", "HgVersion\HgVersion.csproj", "{F195A48F-C170-4ACB-9F45-E914476D6F71}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HgVersionTests", "HgVersionTests\HgVersionTests.csproj", "{C3C36FD0-77CA-498C-B573-529137C1FF6D}"
@@ -14,14 +10,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{CCCEC81E-F21E-4B58-A026-2648FD6D2D5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CCCEC81E-F21E-4B58-A026-2648FD6D2D5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CCCEC81E-F21E-4B58-A026-2648FD6D2D5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CCCEC81E-F21E-4B58-A026-2648FD6D2D5B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{536B722B-DE28-48FC-ABAF-12B4B9FFB44A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{536B722B-DE28-48FC-ABAF-12B4B9FFB44A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{536B722B-DE28-48FC-ABAF-12B4B9FFB44A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{536B722B-DE28-48FC-ABAF-12B4B9FFB44A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F195A48F-C170-4ACB-9F45-E914476D6F71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F195A48F-C170-4ACB-9F45-E914476D6F71}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F195A48F-C170-4ACB-9F45-E914476D6F71}.Release|Any CPU.ActiveCfg = Release|Any CPU
