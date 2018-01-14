@@ -1,0 +1,6 @@
+[submodule "src/Hg.Net"]
+	path = src/Hg.Net
+	url = https://github.com/vcipher/hg.net.git
+[submodule "src/VCSVersion"]
+	path = src/VCSVersion
+	url = https://github.com/vcipher/vcsversion.git

@@ -267,7 +267,7 @@ paket-files/
 .fake/
 
 # JetBrains Rider
-.idea/
+*/.idea/ 
 *.sln.iml
 
 # CodeRush
@@ -290,3 +290,10 @@ tools/**
 *.btm.cs
 *.odx.cs
 *.xsd.cs
+
+# Cake.Graph related
+docs/input/tasks/*.json
+
+# Wyam config
+config.wyam.dll
+config.wyam.hash

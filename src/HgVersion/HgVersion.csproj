@@ -1,103 +1,48 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0B5AC676-15D0-422A-A54B-5794C8A55716}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HgVersion</RootNamespace>
+    <TargetFrameworks>net461</TargetFrameworks>
     <AssemblyName>HgVersion</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\HgVersion.xml</DocumentationFile>
+    <PackageId>HgVersion</PackageId>
+    <Authors>vCipher</Authors>
+    <Description>Provide Semantic versioning using Mercurial history</Description>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Copyright>Copyright © vCipher 2018</Copyright>
+    <PackageProjectUrl>https://github.com/vCipher/HgVersion</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/vCipher/HgVersion</RepositoryUrl>
+    <PackageTags>cake mercurial semver</PackageTags>
     <NoWarn>1591</NoWarn>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\HgVersion.xml</DocumentationFile>
-    <NoWarn>1591</NoWarn>
-  </PropertyGroup>
+  <Choose>
+    <When Condition="'$(Configuration)' == 'Debug' AND Exists('..\Hg.Net')">
+      <ItemGroup>
+        <ProjectReference Include="..\Hg.Net\src\Mercurial.Net\Mercurial.Net.csproj" />
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <ItemGroup>
+        <PackageReference Include="Hg.Net" Version="0.1.5" />
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
+  <Choose>
+    <When Condition="'$(Configuration)' == 'Debug' AND Exists('..\VCSVersion')">
+      <ItemGroup>
+        <ProjectReference Include="..\VCSVersion\src\VCSVersion\VCSVersion.csproj" />
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <ItemGroup>
+        <PackageReference Include="VCSVersion" Version="0.1.5" />
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
   <ItemGroup>
-    <Reference Include="Mercurial.Net, Version=0.1.1.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\Hg.Net.0.1.1\lib\net461\Mercurial.Net.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="VCSVersion, Version=0.1.3.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\VCSVersion.0.1.3\lib\net461\VCSVersion.dll</HintPath>
-    </Reference>
-    <Reference Include="YamlDotNet, Version=4.2.3.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\YamlDotNet.4.2.3\lib\net35\YamlDotNet.dll</HintPath>
-    </Reference>
+    <PackageReference Include="YamlDotNet" Version="4.2.3" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Configuration\BranchConfigurationCalculator.cs" />
-    <Compile Include="Configuration\HgConfigrationException.cs" />
-    <Compile Include="Configuration\HgConfigurationProvider.cs" />
-    <Compile Include="HgVersionContext.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Templating\InvalidTemplatePathException.cs" />
-    <Compile Include="Templating\TemplateManager.cs" />
-    <Compile Include="Templating\TemplateType.cs" />
-    <Compile Include="VCS\HgBranchHead.cs" />
-    <Compile Include="VCS\HgCommit.cs" />
-    <Compile Include="VCS\HgLogQuery.cs" />
-    <Compile Include="VCS\HgLogQueryBuilder.cs" />
-    <Compile Include="VCS\HgMergeMessage.cs" />
-    <Compile Include="VCS\HgNamedCommit.cs" />
-    <Compile Include="VCS\HgRepository.cs" />
-    <Compile Include="VCS\HgRepositoryMetadataProvider.cs" />
-    <Compile Include="VCS\HgTag.cs" />
-    <Compile Include="VCS\IHgRepository.cs" />
-    <Compile Include="VersionAssemblyInfoResources\AssemblyInfoFileUpdater.cs" />
-    <Compile Include="VersionInformationResources\VersionInformationGenerator.cs" />
+    <Compile Remove="VersionAssemblyInfoResources\AddFormats\**" />
+    <Compile Remove="VersionAssemblyInfoResources\Templates\**" />
+    <Compile Remove="VersionInformationResources\AddFormats\**" />
+    <Compile Remove="VersionInformationResources\Templates\**" />
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="VersionAssemblyInfoResources\AddFormats\VersionAssemblyInfo.cs" />
-    <EmbeddedResource Include="VersionAssemblyInfoResources\Templates\VersionAssemblyInfo.cs" />
-    <EmbeddedResource Include="VersionInformationResources\AddFormats\VersionInformation.cs" />
-    <EmbeddedResource Include="VersionInformationResources\Templates\VersionInformation.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="VersionAssemblyInfoResources\AddFormats\VersionAssemblyInfo.fs" />
-    <EmbeddedResource Include="VersionAssemblyInfoResources\Templates\VersionAssemblyInfo.fs" />
-    <EmbeddedResource Include="VersionInformationResources\AddFormats\VersionInformation.fs" />
-    <EmbeddedResource Include="VersionInformationResources\Templates\VersionInformation.fs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="VersionAssemblyInfoResources\AddFormats\VersionAssemblyInfo.vb" />
-    <EmbeddedResource Include="VersionAssemblyInfoResources\Templates\VersionAssemblyInfo.vb" />
-    <EmbeddedResource Include="VersionInformationResources\AddFormats\VersionInformation.vb" />
-    <EmbeddedResource Include="VersionInformationResources\Templates\VersionInformation.vb" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\SolutionInfo.cs" Condition="Exists('..\SolutionInfo.cs')">
-      <Link>Properties\SolutionInfo.cs</Link>
-    </Compile>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

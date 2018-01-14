@@ -1,4 +1,5 @@
 #load nuget:https://www.myget.org/F/cake-contrib/api/v2?package=Cake.Recipe&prerelease
+#load "pack.cake"
 
 Environment.SetVariableNames();
 
@@ -19,7 +20,8 @@ ToolSettings.SetToolSettings(
     context: Context,
     dupFinderExcludePattern: new string[] {
         BuildParameters.RootDirectoryPath + "/src/*Tests/**/*.cs",
-        BuildParameters.RootDirectoryPath + "/src/**/*.AssemblyInfo.cs"
+        BuildParameters.RootDirectoryPath + "/src/**/*.AssemblyInfo.cs",
+        BuildParameters.RootDirectoryPath + "/src/Hg.Net/**/*.cs",
     });
 
-Build.Run();
+Build.RunDotNetCore();
