@@ -11,6 +11,8 @@
     <RepositoryUrl>https://github.com/vCipher/HgVersion</RepositoryUrl>
     <PackageTags>cake mercurial semver</PackageTags>
     <NoWarn>1591</NoWarn>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Hg.Net" Version="0.1.5" />

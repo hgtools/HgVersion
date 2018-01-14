@@ -3,7 +3,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace HgVersionTests.Helpers
+namespace HgVersion.Tests.Helpers
 {
     public class TestStream : Stream
     {

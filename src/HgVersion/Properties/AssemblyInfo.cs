@@ -1,3 +1,3 @@
 ﻿using System.Runtime.CompilerServices;
 
-[assembly:InternalsVisibleTo("HgVersionTests")]
+[assembly:InternalsVisibleTo("HgVersion.Tests")]

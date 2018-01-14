@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
-using HgVersion;
 using HgVersion.VCS;
 using Mercurial;
 using VCSVersion;
@@ -11,7 +10,7 @@ using VCSVersion.Helpers;
 using VCSVersion.SemanticVersions;
 using VCSVersion.VCS;
 
-namespace HgVersionTests
+namespace HgVersion.Tests
 {
     public sealed class TestVesionContext : IVersionContext, IDisposable
     {

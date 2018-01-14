@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HgVersion", "HgVersion\HgVersion.csproj", "{F195A48F-C170-4ACB-9F45-E914476D6F71}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HgVersionTests", "HgVersionTests\HgVersionTests.csproj", "{C3C36FD0-77CA-498C-B573-529137C1FF6D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HgVersion.Tests", "HgVersion.Tests\HgVersion.Tests.csproj", "{F7EA0E12-3320-4BA7-A777-4E97EE86F381}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -14,9 +14,9 @@ Global
 		{F195A48F-C170-4ACB-9F45-E914476D6F71}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F195A48F-C170-4ACB-9F45-E914476D6F71}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F195A48F-C170-4ACB-9F45-E914476D6F71}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C3C36FD0-77CA-498C-B573-529137C1FF6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C3C36FD0-77CA-498C-B573-529137C1FF6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C3C36FD0-77CA-498C-B573-529137C1FF6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C3C36FD0-77CA-498C-B573-529137C1FF6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7EA0E12-3320-4BA7-A777-4E97EE86F381}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7EA0E12-3320-4BA7-A777-4E97EE86F381}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7EA0E12-3320-4BA7-A777-4E97EE86F381}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7EA0E12-3320-4BA7-A777-4E97EE86F381}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

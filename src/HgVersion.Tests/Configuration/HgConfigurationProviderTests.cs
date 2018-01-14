@@ -1,20 +1,19 @@
-﻿using HgVersion.Configuration;
-using HgVersionTests.Helpers;
-using NUnit.Framework;
-using Shouldly;
-using System;
-using System.ComponentModel;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using HgVersion.Configuration;
+using HgVersion.Tests.Helpers;
+using NUnit.Framework;
+using Shouldly;
 using VCSVersion;
 using VCSVersion.AssemblyVersioning;
 using VCSVersion.Configuration;
 using VCSVersion.Helpers;
 using YamlDotNet.Serialization;
 
-namespace HgVersionTests.Configuration
+namespace HgVersion.Tests.Configuration
 {
     [TestFixture, Parallelizable(ParallelScope.Self)]
     public class HgConfigurationProviderTests

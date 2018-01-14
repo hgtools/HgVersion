@@ -1,7 +1,6 @@
-﻿using System;
-using HgVersion.Configuration;
+﻿using HgVersion.Configuration;
+using HgVersion.Tests.VCS;
 using HgVersion.VCS;
-using HgVersionTests.VCS;
 using Shouldly;
 using VCSVersion;
 using VCSVersion.Configuration;
@@ -9,7 +8,7 @@ using VCSVersion.Output;
 using VCSVersion.SemanticVersions;
 using VCSVersion.VCS;
 
-namespace HgVersionTests
+namespace HgVersion.Tests
 {
     public static class TestExtensions
     {

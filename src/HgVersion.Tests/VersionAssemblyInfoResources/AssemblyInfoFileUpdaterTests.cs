@@ -1,19 +1,19 @@
-﻿using HgVersion.VersionAssemblyInfoResources;
-using HgVersionTests.Configuration;
-using HgVersionTests.Helpers;
-using Moq;
-using NUnit.Framework;
-using Shouldly;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq.Expressions;
+using HgVersion.Tests.Configuration;
+using HgVersion.Tests.Helpers;
+using HgVersion.VersionAssemblyInfoResources;
+using Moq;
+using NUnit.Framework;
+using Shouldly;
 using VCSVersion.AssemblyVersioning;
 using VCSVersion.Helpers;
 using VCSVersion.Output;
 using VCSVersion.SemanticVersions;
 
-namespace HgVersionTests.VersionAssemblyInfoResources
+namespace HgVersion.Tests.VersionAssemblyInfoResources
 {
     [TestFixture, Parallelizable(ParallelScope.All)]
     public class AssemblyInfoFileUpdaterTests

@@ -6,7 +6,7 @@ using Mercurial;
 using VCSVersion;
 using VCSVersion.VCS;
 
-namespace HgVersionTests.VCS
+namespace HgVersion.Tests.VCS
 {
     public sealed class RepositoryLogger : IHgRepository
     {

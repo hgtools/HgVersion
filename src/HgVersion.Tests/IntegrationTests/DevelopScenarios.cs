@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 using NUnit.Framework;
 using VCSVersion.Configuration;
 using VCSVersion.VersionCalculation;
-using System.Text;
 
-namespace HgVersionTests.IntegrationTests
+namespace HgVersion.Tests.IntegrationTests
 {
     [TestFixture, Parallelizable(ParallelScope.All)]
     public class DevelopScenarios

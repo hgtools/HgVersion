@@ -2,7 +2,7 @@
 using Mercurial;
 using NUnit.Framework;
 
-namespace HgVersionTests.VCS
+namespace HgVersion.Tests.VCS
 {
     [TestFixture, Parallelizable(ParallelScope.All)]
     public class HgLogQueryTests

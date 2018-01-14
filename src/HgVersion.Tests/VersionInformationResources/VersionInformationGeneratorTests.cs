@@ -1,14 +1,13 @@
-﻿using HgVersionTests.Configuration;
-using HgVersionTests.Helpers;
+﻿using System;
+using System.IO;
+using HgVersion.Tests.Configuration;
+using HgVersion.Tests.Helpers;
+using HgVersion.VersionInformationResources;
 using NUnit.Framework;
 using Shouldly;
-using System;
-using System.IO;
-using HgVersion.VersionInformationResources;
-using VCSVersion.Output;
 using VCSVersion.SemanticVersions;
 
-namespace HgVersionTests.VersionInformationResources
+namespace HgVersion.Tests.VersionInformationResources
 {
     [TestFixture, Parallelizable(ParallelScope.All)]
     public class VersionInformationGeneratorTests

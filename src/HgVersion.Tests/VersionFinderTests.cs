@@ -1,10 +1,9 @@
-﻿﻿using System.IO;
-using Mercurial;
+﻿using Mercurial;
 using NUnit.Framework;
 using VCSVersion;
 using VCSVersion.SemanticVersions;
 
-namespace HgVersionTests
+namespace HgVersion.Tests
 {
     [TestFixture, Parallelizable(ParallelScope.All)]
     public class VersionFinderTests

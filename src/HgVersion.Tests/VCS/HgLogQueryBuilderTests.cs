@@ -1,8 +1,7 @@
 ﻿using HgVersion.VCS;
 using NUnit.Framework;
-using System;
 
-namespace HgVersionTests.VCS
+namespace HgVersion.Tests.VCS
 {
     [TestFixture, Parallelizable(ParallelScope.All)]
     public class HgLogQueryBuilderTests

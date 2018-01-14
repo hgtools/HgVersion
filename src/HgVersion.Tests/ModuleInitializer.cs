@@ -1,8 +1,8 @@
-﻿using NUnit.Framework;
-using System;
+﻿using System;
+using NUnit.Framework;
 using VCSVersion;
 
-namespace HgVersionTests
+namespace HgVersion.Tests
 {
     [SetUpFixture]
     public class ModuleInitializer

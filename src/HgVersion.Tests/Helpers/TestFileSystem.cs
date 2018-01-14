@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using VCSVersion.Helpers;
 
-namespace HgVersionTests.Helpers
+namespace HgVersion.Tests.Helpers
 {
     public class TestFileSystem : IFileSystem
     {

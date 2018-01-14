@@ -2,7 +2,7 @@
 using NUnit.Framework;
 using Shouldly;
 
-namespace HgVersionTests.VCS
+namespace HgVersion.Tests.VCS
 {
     [TestFixture, Parallelizable(ParallelScope.All)]
     public class HgMergeMessageTests

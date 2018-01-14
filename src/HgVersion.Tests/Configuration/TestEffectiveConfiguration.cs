@@ -6,8 +6,7 @@ using VCSVersion.VersionCalculation;
 using VCSVersion.VersionCalculation.IncrementStrategies;
 using VCSVersion.VersionCalculation.VersionFilters;
 
-
-namespace HgVersionTests.Configuration
+namespace HgVersion.Tests.Configuration
 {
     public class TestEffectiveConfiguration : EffectiveConfiguration
     {
