@@ -62,15 +62,16 @@ namespace HgVersion.VCS
         {
             return Revision.Except(
                 RevSpec.Affects(".hgtags") &
+                RevSpec.Grep("Added tag .+ for changeset .+") &
                 !RevSpec.Tagged());
         }
 
         /// <summary>
         /// Get a <see cref="HgLogQuery"/> that selects last commit.
         /// </summary>
-        public HgLogQuery Last()
+        public HgLogQuery Last(int amount = 1)
         {
-            return new RevSpec($"last({Revision})");
+            return new RevSpec($"last({Revision}, {amount})");
         }
 
         /// <summary>
@@ -81,8 +82,12 @@ namespace HgVersion.VCS
             new HgLogQuery(revision);
 
         /// <inheritdoc />
-        ILogQuery ILogQuery.Limit(int amount) =>
+        ILogQuery ILogQuery.First(int amount) =>
             Limit(amount);
+        
+        /// <inheritdoc />
+        ILogQuery ILogQuery.Last(int amount) =>
+            Last(amount);
 
         /// <inheritdoc />
         public override string ToString()

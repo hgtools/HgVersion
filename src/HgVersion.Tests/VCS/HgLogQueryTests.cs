@@ -36,7 +36,7 @@ namespace HgVersion.Tests.VCS
             var query = new HgLogQuery(RevSpec.All)
                 .ExceptTaggingCommits();
             
-            Assert.That(query.Revision.ToString(), Is.EqualTo("all() - (file(.hgtags) and (not tag()))"));
+            Assert.That(query.Revision.ToString(), Is.EqualTo("all() - ((file(.hgtags) and grep(r'Added tag .+ for changeset .+')) and (not tag()))"));
         }
     }
 }

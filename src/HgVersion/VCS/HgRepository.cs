@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Channels;
 using Mercurial;
+using Mercurial.Gui;
 using VCSVersion;
 using VCSVersion.VCS;
 
@@ -25,14 +27,6 @@ namespace HgVersion.VCS
         public string Path => _repository.Path;
 
         /// <inheritdoc />
-        public IEnumerable<ICommit> Log()
-        {
-            return _repository
-                .Log()
-                .Select(changeset => (HgCommit) changeset);
-        }
-
-        /// <inheritdoc />
         public IEnumerable<ICommit> Log(ILogQuery query)
         {
             if (query == null)
@@ -48,15 +42,42 @@ namespace HgVersion.VCS
         }
 
         /// <inheritdoc />
-        public IEnumerable<ICommit> Log(Func<ILogQueryBuilder, ILogQuery> config)
+        public IEnumerable<ICommit> Log(Func<ILogQueryBuilder, ILogQuery> select)
         {
-            if (config == null)
-                throw new ArgumentNullException(nameof(config));
+            if (select == null)
+                throw new ArgumentNullException(nameof(select));
 
             var builder = new HgLogQueryBuilder();
-            var query = config(builder);
+            var query = select(builder);
 
             return Log(query);
+        }
+        
+        /// <inheritdoc />
+        public int Count(ILogQuery query)
+        {
+            if (query == null)
+                throw new ArgumentNullException(nameof(query));
+
+            if (!(query is HgLogQuery hgQuery))
+                throw new InvalidOperationException($"{query.GetType()} is not supported.");
+
+            var command = new CountCommand()
+                .WithRevision(hgQuery.Revision);
+
+            return _repository.Execute(command);
+        }
+
+        /// <inheritdoc />
+        public int Count(Func<ILogQueryBuilder, ILogQuery> select)
+        {
+            if (select == null)
+                throw new ArgumentNullException(nameof(select));
+            
+            var builder = new HgLogQueryBuilder();
+            var query = select(builder);
+
+            return Count(query);
         }
 
         /// <inheritdoc />
@@ -99,28 +120,12 @@ namespace HgVersion.VCS
         }
 
         /// <inheritdoc />
-        public ICommit Tip()
-        {
-            return (HgCommit) _repository.Tip();
-        }
-
-        /// <inheritdoc />
         public void Tag(string name)
         {
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentNullException(nameof(name));
 
             _repository.Tag(name);
-        }
-
-        /// <inheritdoc />
-        public IEnumerable<ITag> Tags()
-        {
-            return _repository
-                .Tags()
-                .Select(tag => new HgTag(
-                    tag.Name,
-                    () => GetCommit(tag.RevisionNumber)));
         }
 
         /// <inheritdoc />

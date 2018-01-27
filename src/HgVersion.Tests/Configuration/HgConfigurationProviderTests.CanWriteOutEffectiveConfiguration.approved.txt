@@ -114,3 +114,8 @@ branches:
 ignore:
   sha: []
 commit-date-format: yyyy-MM-dd
+base-version-strategies:
+- fallback-version
+- merge-message-version
+- tagged-commit-version
+tagged-commits-limit: 10

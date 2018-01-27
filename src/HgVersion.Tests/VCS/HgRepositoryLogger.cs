@@ -10,7 +10,7 @@ namespace HgVersion.Tests.VCS
 {
     public sealed class RepositoryLogger : IHgRepository
     {
-        private IHgRepository _repository;
+        private readonly IHgRepository _repository;
 
         public RepositoryLogger(IHgRepository repository)
         {
@@ -27,16 +27,7 @@ namespace HgVersion.Tests.VCS
                 }
             }
         }
-
-        public IEnumerable<ICommit> Log()
-        {
-            using (Logger.IndentLog($"Get log"))
-            {
-                return _repository.Log()
-                    .ToList();
-            }
-        }
-
+        
         public IEnumerable<ICommit> Log(ILogQuery query)
         {
             using (Logger.IndentLog($"Get log by query: {query}"))
@@ -49,6 +40,19 @@ namespace HgVersion.Tests.VCS
         public IEnumerable<ICommit> Log(Func<ILogQueryBuilder, ILogQuery> config)
         {
             return _repository.Log(config);
+        }
+        
+        public int Count(ILogQuery query)
+        {
+            using (Logger.IndentLog($"Get commit count from log by query: {query}"))
+            {
+                return _repository.Count(query);
+            }
+        }
+
+        public int Count(Func<ILogQueryBuilder, ILogQuery> config)
+        {
+            return _repository.Count(config);
         }
 
         public IEnumerable<ICommit> Heads()
@@ -84,29 +88,12 @@ namespace HgVersion.Tests.VCS
                     .ToList();
             }
         }
-
-        public ICommit Tip()
-        {
-            using (Logger.IndentLog("Get tip commit"))
-            {
-                return _repository.Tip();
-            }
-        }
-
+        
         public void Tag(string name)
         {
             using (Logger.IndentLog($"Add tag: {name} to current commit"))
             {
                 _repository.Tag(name);
-            }
-        }
-
-        public IEnumerable<ITag> Tags()
-        {
-            using (Logger.IndentLog("Get all repository tags"))
-            {
-                return _repository.Tags()
-                    .ToList();
             }
         }
 

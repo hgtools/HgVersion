@@ -1,10 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using VCSVersion.AssemblyVersioning;
 using VCSVersion.Configuration;
+using VCSVersion.Helpers;
 using VCSVersion.VersionCalculation;
+using VCSVersion.VersionCalculation.BaseVersionCalculation;
 using VCSVersion.VersionCalculation.IncrementStrategies;
 using VCSVersion.VersionCalculation.VersionFilters;
+
 
 namespace HgVersion.Tests.Configuration
 {
@@ -33,15 +37,23 @@ namespace HgVersion.Tests.Configuration
             IEnumerable<IVersionFilter> versionFilters = null,
             bool tracksReleaseBranches = false,
             bool isRelease = false,
-            string commitDateFormat = "yyyy-MM-dd") :
+            string commitDateFormat = "yyyy-MM-dd",
+            int taggedCommitsLimit = 10) :
             base(assemblyVersioningScheme, assemblyFileVersioningScheme, assemblyInformationalFormat, versioningMode, tagPrefix, tag, nextVersion, IncrementStrategyType.Patch,
                     branchPrefixToTrim, preventIncrementForMergedBranchVersion, tagNumberPattern, continuousDeploymentFallbackTag,
                     trackMergeTarget,
                     majorMessage, minorMessage, patchMessage, noBumpMessage,
                     commitMessageMode, buildMetaDataPadding, commitsSinceVersionSourcePadding,
                     versionFilters ?? Enumerable.Empty<IVersionFilter>(),
-                    tracksReleaseBranches, isRelease, commitDateFormat)
+                    tracksReleaseBranches, isRelease, commitDateFormat, 
+                    GetDefaultBaseVersionStrategies(), taggedCommitsLimit)
+        { }
+
+        private static IEnumerable<IBaseVersionStrategy> GetDefaultBaseVersionStrategies()
         {
+            return typeof(IBaseVersionStrategy)
+                .GetImplemtetions()
+                .Select(type => (IBaseVersionStrategy) Activator.CreateInstance(type));
         }
     }
 }

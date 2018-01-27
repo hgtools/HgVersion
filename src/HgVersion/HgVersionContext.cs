@@ -1,12 +1,11 @@
-﻿using System;
-using HgVersion.Configuration;
+﻿using HgVersion.Configuration;
 using HgVersion.VCS;
-using Mercurial;
 using VCSVersion;
 using VCSVersion.Configuration;
 using VCSVersion.Helpers;
 using VCSVersion.SemanticVersions;
 using VCSVersion.VCS;
+using VCSVersion.VersionCalculation.BaseVersionCalculation;
 using System.Linq;
 
 namespace HgVersion
@@ -62,40 +61,30 @@ namespace HgVersion
         {
             var currentBranchConfig = BranchConfigurationCalculator.GetBranchConfiguration(this, CurrentBranch);
 
-            if (!currentBranchConfig.VersioningMode.HasValue)
-                throw new HgConfigrationException($"Configuration value for 'Versioning mode' for branch {currentBranchConfig.Name} has no value. (this should not happen, please report an issue)");
-            if (!currentBranchConfig.Increment.HasValue)
-                throw new HgConfigrationException($"Configuration value for 'Increment' for branch {currentBranchConfig.Name} has no value. (this should not happen, please report an issue)");
-            if (!currentBranchConfig.PreventIncrementOfMergedBranchVersion.HasValue)
-                throw new HgConfigrationException($"Configuration value for 'PreventIncrementOfMergedBranchVersion' for branch {currentBranchConfig.Name} has no value. (this should not happen, please report an issue)");
-            if (!currentBranchConfig.TrackMergeTarget.HasValue)
-                throw new HgConfigrationException($"Configuration value for 'TrackMergeTarget' for branch {currentBranchConfig.Name} has no value. (this should not happen, please report an issue)");
-            if (!currentBranchConfig.TracksReleaseBranches.HasValue)
-                throw new HgConfigrationException($"Configuration value for 'TracksReleaseBranches' for branch {currentBranchConfig.Name} has no value. (this should not happen, please report an issue)");
-            if (!currentBranchConfig.IsReleaseBranch.HasValue)
-                throw new HgConfigrationException($"Configuration value for 'IsReleaseBranch' for branch {currentBranchConfig.Name} has no value. (this should not happen, please report an issue)");
-
-            if (!FullConfiguration.AssemblyVersioningScheme.HasValue)
-                throw new HgConfigrationException("Configuration value for 'AssemblyVersioningScheme' has no value. (this should not happen, please report an issue)");
-            if (!FullConfiguration.AssemblyFileVersioningScheme.HasValue)
-                throw new HgConfigrationException("Configuration value for 'AssemblyFileVersioningScheme' has no value. (this should not happen, please report an issue)");
-            if (!FullConfiguration.CommitMessageIncrementing.HasValue)
-                throw new HgConfigrationException("Configuration value for 'CommitMessageIncrementing' has no value. (this should not happen, please report an issue)");
-            if (!FullConfiguration.BuildMetaDataPadding.HasValue)
-                throw new HgConfigrationException("Configuration value for 'BuildMetaDataPadding' has no value. (this should not happen, please report an issue)");
-            if (!FullConfiguration.CommitsSinceVersionSourcePadding.HasValue)
-                throw new HgConfigrationException("Configuration value for 'CommitsSinceVersionSourcePadding' has no value. (this should not happen, please report an issue)");
-
-            var versioningMode = currentBranchConfig.VersioningMode.Value;
+            ThrowIfNull(currentBranchConfig.VersioningMode, nameof(currentBranchConfig.VersioningMode));
+            ThrowIfNull(currentBranchConfig.Increment, nameof(currentBranchConfig.Increment));
+            ThrowIfNull(currentBranchConfig.PreventIncrementOfMergedBranchVersion, nameof(currentBranchConfig.PreventIncrementOfMergedBranchVersion));
+            ThrowIfNull(currentBranchConfig.TrackMergeTarget, nameof(currentBranchConfig.TrackMergeTarget));
+            ThrowIfNull(currentBranchConfig.TracksReleaseBranches, nameof(currentBranchConfig.TracksReleaseBranches));
+            ThrowIfNull(currentBranchConfig.IsReleaseBranch, nameof(currentBranchConfig.IsReleaseBranch));
+            
+            ThrowIfNull(FullConfiguration.AssemblyVersioningScheme, nameof(FullConfiguration.AssemblyVersioningScheme));
+            ThrowIfNull(FullConfiguration.AssemblyFileVersioningScheme, nameof(FullConfiguration.AssemblyFileVersioningScheme));
+            ThrowIfNull(FullConfiguration.CommitMessageIncrementing, nameof(FullConfiguration.CommitMessageIncrementing));
+            ThrowIfNull(FullConfiguration.BuildMetaDataPadding, nameof(FullConfiguration.BuildMetaDataPadding));
+            ThrowIfNull(FullConfiguration.CommitsSinceVersionSourcePadding, nameof(FullConfiguration.CommitsSinceVersionSourcePadding));
+            ThrowIfNull(FullConfiguration.TaggedCommitsLimit, nameof(FullConfiguration.TaggedCommitsLimit));
+            
+            var versioningMode = currentBranchConfig.VersioningMode.GetValueOrDefault();
             var tag = currentBranchConfig.Tag;
             var tagNumberPattern = currentBranchConfig.TagNumberPattern;
-            var incrementStrategy = currentBranchConfig.Increment.Value;
-            var preventIncrementForMergedBranchVersion = currentBranchConfig.PreventIncrementOfMergedBranchVersion.Value;
-            var trackMergeTarget = currentBranchConfig.TrackMergeTarget.Value;
+            var incrementStrategy = currentBranchConfig.Increment.GetValueOrDefault();
+            var preventIncrementForMergedBranchVersion = currentBranchConfig.PreventIncrementOfMergedBranchVersion.GetValueOrDefault();
+            var trackMergeTarget = currentBranchConfig.TrackMergeTarget.GetValueOrDefault();
 
             var nextVersion = FullConfiguration.NextVersion;
-            var assemblyVersioningScheme = FullConfiguration.AssemblyVersioningScheme.Value;
-            var assemblyFileVersioningScheme = FullConfiguration.AssemblyFileVersioningScheme.Value;
+            var assemblyVersioningScheme = FullConfiguration.AssemblyVersioningScheme.GetValueOrDefault();
+            var assemblyFileVersioningScheme = FullConfiguration.AssemblyFileVersioningScheme.GetValueOrDefault();
             var assemblyInformationalFormat = FullConfiguration.AssemblyInformationalFormat;
             var tagPrefix = FullConfiguration.TagPrefix;
             var majorMessage = FullConfiguration.MajorVersionBumpMessage;
@@ -103,9 +92,10 @@ namespace HgVersion
             var patchMessage = FullConfiguration.PatchVersionBumpMessage;
             var noBumpMessage = FullConfiguration.NoBumpMessage;
             var commitDateFormat = FullConfiguration.CommitDateFormat;
-
-            var commitMessageVersionBump = currentBranchConfig.CommitMessageIncrementing ?? FullConfiguration.CommitMessageIncrementing.Value;
-
+            var baseVersionStrategies = FullConfiguration.BaseVersionStrategies;
+            var taggedCommitsLimit = FullConfiguration.TaggedCommitsLimit;
+            var commitMessageVersionBump = currentBranchConfig.CommitMessageIncrementing ?? FullConfiguration.CommitMessageIncrementing.GetValueOrDefault();
+            
             return new EffectiveConfiguration(
                 assemblyVersioningScheme, assemblyFileVersioningScheme, assemblyInformationalFormat, versioningMode, tagPrefix,
                 tag, nextVersion, incrementStrategy,
@@ -115,12 +105,14 @@ namespace HgVersion
                 trackMergeTarget,
                 majorMessage, minorMessage, patchMessage, noBumpMessage,
                 commitMessageVersionBump,
-                FullConfiguration.BuildMetaDataPadding.Value,
-                FullConfiguration.CommitsSinceVersionSourcePadding.Value,
+                FullConfiguration.BuildMetaDataPadding.GetValueOrDefault(),
+                FullConfiguration.CommitsSinceVersionSourcePadding.GetValueOrDefault(),
                 FullConfiguration.Ignore.ToFilters(),
-                currentBranchConfig.TracksReleaseBranches.Value,
-                currentBranchConfig.IsReleaseBranch.Value,
-                commitDateFormat);
+                currentBranchConfig.TracksReleaseBranches.GetValueOrDefault(),
+                currentBranchConfig.IsReleaseBranch.GetValueOrDefault(),
+                commitDateFormat,
+                ConfigHelper.GetEntities<IBaseVersionStrategy>(baseVersionStrategies),
+                taggedCommitsLimit.GetValueOrDefault());
         }
 
         private SemanticVersion CalculateCurrentCommitTaggedVersion()
@@ -129,12 +121,18 @@ namespace HgVersion
                 .Tags
                 .SelectMany(tag =>
                 {
-                    if (SemanticVersion.TryParse(tag, Configuration.TagPrefix, out var version))
+                    if (SemanticVersion.TryParse(tag.Name, Configuration.TagPrefix, out var version))
                         return new[] { version };
 
-                    return new SemanticVersion[0];
+                    return Enumerable.Empty<SemanticVersion>();
                 })
                 .Max();
+        }
+
+        private static void ThrowIfNull<T>(T? value, string name) where T : struct 
+        {
+            if (!value.HasValue)
+                throw new HgConfigrationException($"Configuration value for '{name}' has no value. (this should not happen, please report an issue)");
         }
     }
 }

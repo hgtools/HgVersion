@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using HgVersion.VCS;
+using Mercurial;
 using NUnit.Framework;
+using VCSVersion;
 using VCSVersion.Configuration;
 using VCSVersion.VersionCalculation;
 
@@ -35,7 +38,10 @@ namespace HgVersion.Tests.IntegrationTests
                 context.MakeCommit();
                 context.MakeCommit();
 
-                var thirdCommit = context.Tip(); 
+                var thirdCommit = context
+                    .Repository
+                    .CurrentCommit();
+                
                 context.MakeCommit();
                 context.MakeCommit();
 

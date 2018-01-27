@@ -16,7 +16,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Hg.Net" Version="0.1.5" />
-    <PackageReference Include="VCSVersion" Version="0.1.5" />
+    <PackageReference Include="VCSVersion" Version="0.1.6" />
     <PackageReference Include="YamlDotNet" Version="4.2.3" />
   </ItemGroup>
   <ItemGroup>

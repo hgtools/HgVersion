@@ -1,4 +1,5 @@
-﻿using Mercurial;
+﻿using System.Collections.Generic;
+using Mercurial;
 using VCSVersion.VCS;
 
 namespace HgVersion.VCS
@@ -37,5 +38,19 @@ namespace HgVersion.VCS
         /// </summary>
         /// <param name="rev">Revision to update</param>
         void Update(RevSpec rev);
+        
+        /// <summary>
+        /// Add all new files, delete all missing files.
+        /// </summary>
+        void AddRemove();
+        
+        /// <summary>
+        /// Commits the specified files or all outstanding changes to the repository.
+        /// </summary>
+        /// <param name="message">The commit message to use.</param>
+        /// <returns>
+        /// The hash of the new commit.
+        /// </returns>
+        string Commit(string message);
     }
 }

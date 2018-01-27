@@ -10,7 +10,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Hg.Net" Version="0.1.5" />
-    <PackageReference Include="VCSVersion" Version="0.1.5" />
+    <PackageReference Include="VCSVersion" Version="0.1.6" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
     <PackageReference Include="Moq" Version="4.8.1" />
     <PackageReference Include="NUnit" Version="3.9.0" />

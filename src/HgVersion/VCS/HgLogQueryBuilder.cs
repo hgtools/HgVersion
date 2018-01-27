@@ -87,14 +87,34 @@ namespace HgVersion.VCS
                 RevSpec.Single(fromHash), 
                 RevSpec.Single(toHash));
         }
+        
+        /// <summary>
+        /// Create a <see cref="HgLogQuery"/> that includes the commit
+        /// with tags by specific tag pattern.
+        /// </summary>
+        /// <param name="pattern">Tag pattern</param>
+        public HgLogQuery Tagged(string pattern)
+        {
+            return RevSpec.Tagged($"re:{pattern}");
+        }
+        
+        /// <summary>
+        /// Create a <see cref="HgLogQuery"/> that includes the commit with tags.
+        /// </summary>
+        public HgLogQuery Tagged()
+        {
+            return RevSpec.Tagged();
+        }
 
         /// <summary>
-        /// Creates a <see cref="HgLogQuery"/> that finds tagged commits that belongs to the named branch.
+        /// Create a <see cref="HgLogQuery"/> that includes the commit
+        /// intersected with <paramref name="left"/> query and <paramref name="right"/> query.
         /// </summary>
-        /// <param name="name">Branch name.</param>
-        public HgLogQuery TaggedBranchCommits(string name)
+        /// <param name="left">Left part of intersection</param>
+        /// <param name="right">Right part of intersection</param>
+        public HgLogQuery Intersect(HgLogQuery left, HgLogQuery right)
         {
-            return RevSpec.ByBranch(name) & RevSpec.Tagged();
+            return left.Revision & right.Revision;
         }
 
         /// <inheritdoc />
@@ -103,7 +123,7 @@ namespace HgVersion.VCS
 
         /// <inheritdoc />
         ILogQuery ILogQueryBuilder.Single(string hash) =>
-            Single(hash).ExceptTaggingCommits();
+            Single(hash);
 
         /// <inheritdoc />
         ILogQuery ILogQueryBuilder.ByBranch(string name) =>
@@ -112,6 +132,17 @@ namespace HgVersion.VCS
         /// <inheritdoc />
         ILogQuery ILogQueryBuilder.Range(string fromHash, string toHash) =>
             Range(fromHash, toHash).ExceptTaggingCommits();
+
+        /// <inheritdoc />
+        ILogQuery ILogQueryBuilder.Tagged(string pattern) =>
+            Tagged(pattern);
         
+        /// <inheritdoc />
+        ILogQuery ILogQueryBuilder.Tagged() =>
+            Tagged();
+        
+        /// <inheritdoc />
+        ILogQuery ILogQueryBuilder.Intersect(ILogQuery left, ILogQuery right) =>
+            Intersect((HgLogQuery) left, (HgLogQuery) right);
     }
 }

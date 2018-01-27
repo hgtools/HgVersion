@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
+using HgVersion;
 using HgVersion.VCS;
 using Mercurial;
 using VCSVersion;
@@ -49,11 +50,6 @@ namespace HgVersion.Tests
         public void CreateBranch(string branch)
         {
             _repository.Branch(branch);
-        }
-
-        public ICommit Tip()
-        {
-            return _repository.Tip();
         }
 
         public void Update(RevSpec rev)

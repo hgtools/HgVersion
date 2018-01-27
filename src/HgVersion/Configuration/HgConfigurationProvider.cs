@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -8,11 +8,15 @@ using VCSVersion.Configuration;
 using VCSVersion.Helpers;
 using VCSVersion.VCS;
 using VCSVersion.VersionCalculation;
+using VCSVersion.VersionCalculation.BaseVersionCalculation;
 using VCSVersion.VersionCalculation.IncrementStrategies;
+
+// ReSharper disable ConvertIfStatementToReturnStatement
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace HgVersion.Configuration
 {
-    public class HgConfigurationProvider
+    public static class HgConfigurationProvider
     {
         internal const string DefaultTagPrefix = "[vV]";
 
@@ -87,12 +91,17 @@ namespace HgVersion.Configuration
 
         private static void VerifyConfiguration(Config readConfig)
         {
+            if (readConfig == null) 
+                throw new ArgumentNullException(nameof(readConfig));
+            
             // Verify no branches are set to mainline mode
             if (readConfig.Branches.Any(b => b.Value.VersioningMode == VersioningMode.Mainline))
             {
-                throw new ConfigurationException(@"Mainline mode only works at the repository level, a single branch cannot be put into mainline mode
-
-This is because mainline mode treats your entire Mercurial repository as an event source with each merge into the 'mainline' incrementing the version.");
+                throw new ConfigurationException(
+                    "Mainline mode only works at the repository level, a single branch " +
+                    "cannot be put into mainline mode. This is because mainline mode " + 
+                    "treats your entire Mercurial repository as an event source with " +
+                    "each merge into the 'mainline' incrementing the version.");
             }
         }
 
@@ -112,7 +121,9 @@ This is because mainline mode treats your entire Mercurial repository as an even
             config.BuildMetaDataPadding = config.BuildMetaDataPadding ?? 4;
             config.CommitsSinceVersionSourcePadding = config.CommitsSinceVersionSourcePadding ?? 4;
             config.CommitDateFormat = config.CommitDateFormat ?? "yyyy-MM-dd";
-
+            config.BaseVersionStrategies = config.BaseVersionStrategies ?? GetDefaultBaseVersionStrategies();
+            config.TaggedCommitsLimit = config.TaggedCommitsLimit ?? 10;
+            
             var configBranches = config.Branches.ToList();
 
             ApplyBranchDefaults(config,
@@ -197,21 +208,28 @@ This is because mainline mode treats your entire Mercurial repository as an even
             }
         }
 
+        private static string[] GetDefaultBaseVersionStrategies()
+        {
+            return ConfigHelper
+                .GetConfigurationAliases<IBaseVersionStrategy>()
+                .ToArray();
+        }
+
         private static void ApplyOverridesTo(Config config, Config overrideConfig)
         {
-            config.TagPrefix = string.IsNullOrWhiteSpace(overrideConfig.TagPrefix) ? config.TagPrefix : overrideConfig.TagPrefix;
+            config.TagPrefix = string.IsNullOrWhiteSpace(overrideConfig.TagPrefix) 
+                ? config.TagPrefix 
+                : overrideConfig.TagPrefix;
         }
 
         private static BranchConfig GetOrCreateBranchDefaults(Config config, string branchKey)
         {
-            if (!config.Branches.ContainsKey(branchKey))
-            {
-                var branchConfig = new BranchConfig { Name = branchKey };
-                config.Branches.Add(branchKey, branchConfig);
-                return branchConfig;
-            }
-
-            return config.Branches[branchKey];
+            if (config.Branches.ContainsKey(branchKey)) 
+                return config.Branches[branchKey];
+            
+            var branchConfig = new BranchConfig { Name = branchKey };
+            config.Branches.Add(branchKey, branchConfig);
+            return branchConfig;
         }
 
         public static void ApplyBranchDefaults(Config config,
@@ -243,15 +261,13 @@ This is because mainline mode treats your entire Mercurial repository as an even
 
         private static Config ReadConfig(string workingDirectory, IFileSystem fileSystem)
         {
-            var configFilePath = GetConfigFilePath(workingDirectory, fileSystem);
-
-            if (fileSystem.Exists(configFilePath))
-            {
-                var readAllText = fileSystem.ReadAllText(configFilePath);
-                return ConfigSerialiser.Read(new StringReader(readAllText));
-            }
-
-            return new Config();
+            var configFilePath = GetConfigFilePath(workingDirectory);
+            
+            if (!fileSystem.Exists(configFilePath))
+                return new Config();
+            
+            var readAllText = fileSystem.ReadAllText(configFilePath);
+            return ConfigSerialiser.Read(new StringReader(readAllText));
         }
 
         public static string GetEffectiveConfigAsString(string workingDirectory, IFileSystem fileSystem)
@@ -266,7 +282,7 @@ This is because mainline mode treats your entire Mercurial repository as an even
             return stringBuilder.ToString();
         }
 
-        private static string GetConfigFilePath(string workingDirectory, IFileSystem fileSystem)
+        private static string GetConfigFilePath(string workingDirectory)
         {
             return Path.Combine(workingDirectory, DefaultConfigFileName);
         }

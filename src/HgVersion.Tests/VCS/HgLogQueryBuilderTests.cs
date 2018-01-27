@@ -1,5 +1,7 @@
 ﻿using HgVersion.VCS;
 using NUnit.Framework;
+using System;
+using System.Threading;
 
 namespace HgVersion.Tests.VCS
 {
@@ -11,8 +13,8 @@ namespace HgVersion.Tests.VCS
         {
             var hash = "1abfccc3cb0790837bd06eade2916867343dee33";
 
-            var builder = new HgLogQueryBuilder();
-            var query = builder.Single(hash);
+            var select = new HgLogQueryBuilder();
+            var query = select.Single(hash);
 
             Assert.That(query.Revision.ToString(), Is.EqualTo(hash));
         }
@@ -22,8 +24,8 @@ namespace HgVersion.Tests.VCS
         {
             var hash = "1abfccc3cb0790837bd06eade2916867343dee33";
 
-            var builder = new HgLogQueryBuilder();
-            var query = builder.AncestorsOf(hash);
+            var select = new HgLogQueryBuilder();
+            var query = select.AncestorsOf(hash);
 
             Assert.That(query.Revision.ToString(), Is.EqualTo($"::{hash}"));
         }
@@ -33,8 +35,8 @@ namespace HgVersion.Tests.VCS
         {
             var branch = "default";
 
-            var builder = new HgLogQueryBuilder();
-            var query = builder.ByBranch(branch);
+            var select = new HgLogQueryBuilder();
+            var query = select.ByBranch(branch);
 
             Assert.That(query.Revision.ToString(), Is.EqualTo($"branch('{branch}')"));
         }
@@ -45,11 +47,11 @@ namespace HgVersion.Tests.VCS
             var branch1 = "default";
             var branch2 = "dev";
 
-            var builder = new HgLogQueryBuilder();
-            var query = builder
+            var select = new HgLogQueryBuilder();
+            var query = select
                 .CommonAncestorOf(
-                    builder.ByBranch(branch1),
-                    builder.ByBranch(branch2));
+                    select.ByBranch(branch1),
+                    select.ByBranch(branch2));
 
             Assert.That(query.Revision.ToString(), Is.EqualTo($"ancestor(branch('{branch1}'), branch('{branch2}'))"));
         }
@@ -59,20 +61,41 @@ namespace HgVersion.Tests.VCS
         {
             var branch = "default";
 
-            var builder = new HgLogQueryBuilder();
-            var query = builder.ByBranch(branch)
+            var select = new HgLogQueryBuilder();
+            var query = select.ByBranch(branch)
                 .Limit(1);
 
             Assert.That(query.Revision.ToString(), Is.EqualTo($"limit(branch('{branch}'), 1)"));
         }
+        
+        [Test]
+        public void TaggedTest()
+        {
+            var select = new HgLogQueryBuilder();
+            var query = select.Tagged();
+
+            Assert.That(query.Revision.ToString(), Is.EqualTo("tag()"));
+        }
+        
+        [Test]
+        public void TaggedWithPatternTest()
+        {
+            var select = new HgLogQueryBuilder();
+            var query = select.Tagged(@"\w+");
+
+            Assert.That(query.Revision.ToString(), Is.EqualTo(@"tag('re:\w+')"));
+        }
 
         [Test]
-        public void TaggedBranchCommitsTest()
+        public void IntersectTest()
         {
             var branch = "default";
 
-            var builder = new HgLogQueryBuilder();
-            var query = builder.TaggedBranchCommits(branch);
+            var select = new HgLogQueryBuilder();
+            var query = select.Intersect(
+                select.ByBranch(branch),
+                select.Tagged()
+            );
 
             Assert.That(query.Revision.ToString(), Is.EqualTo($"branch('{branch}') and tag()"));
         }

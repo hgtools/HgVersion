@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Mercurial;
 using VCSVersion.VCS;
 
@@ -29,7 +30,7 @@ namespace HgVersion.VCS
         public string Hash => _changeset.Hash;
 
         /// <inheritdoc />
-        public IEnumerable<string> Tags => _changeset.Tags;
+        public IEnumerable<ITag> Tags => _changeset.Tags.Select(name => new HgTag(name, this));
 
         /// <summary>
         /// Creates an instance of <see cref="HgCommit"/>

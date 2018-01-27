@@ -11,10 +11,10 @@ namespace HgVersion.VCS
     /// <inheritdoc />
     public sealed class HgRepositoryMetadataProvider : IRepositoryMetadataProvider
     {
-        private Dictionary<Tuple<IBranchHead, IBranchHead>, MergeBaseData> _mergeBaseCache;
-        private Dictionary<IBranchHead, List<SemanticVersion>> _semanticVersionTagsOnBranchCache;
-        private IHgRepository _repository;
-        private Config _configuration;
+        private readonly Dictionary<Tuple<IBranchHead, IBranchHead>, MergeBaseData> _mergeBaseCache;
+        private readonly Dictionary<IBranchHead, List<SemanticVersion>> _semanticVersionTagsOnBranchCache;
+        private readonly IHgRepository _repository;
+        private readonly Config _configuration;
 
         public HgRepositoryMetadataProvider(IHgRepository repository, Config configuration)
         {
@@ -35,16 +35,21 @@ namespace HgVersion.VCS
 
             using (Logger.IndentLog($"Getting version tags from branch '{branch.Name}'."))
             {
-                var builder = new HgLogQueryBuilder();
                 var tags = _repository
-                    .Log(builder.TaggedBranchCommits(branch.Name))
+                    .Log(select => 
+                        select.Intersect(
+                            select.TaggedWithVersion(tagPrefixRegex),
+                            select.ByBranch(branch.Name)
+                        )
+                        .Last(_configuration.TaggedCommitsLimit.GetValueOrDefault())
+                    )
                     .SelectMany(commit => commit.Tags)
                     .ToList();
 
                 var versionTags = tags
                     .SelectMany(tag =>
                     {
-                        if (SemanticVersion.TryParse(tag, tagPrefixRegex, out var semver))
+                        if (SemanticVersion.TryParse(tag.Name, tagPrefixRegex, out var semver))
                             return new[] { semver };
 
                         return Enumerable.Empty<SemanticVersion>();
