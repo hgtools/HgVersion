@@ -29,11 +29,7 @@ namespace HgVersion.VCS
         /// <inheritdoc />
         public IEnumerable<ICommit> Log(ILogQuery query)
         {
-            if (query == null)
-                throw new ArgumentNullException(nameof(query));
-
-            if (!(query is HgLogQuery hgQuery))
-                throw new InvalidOperationException($"{query.GetType()} is not supported.");
+            var hgQuery = CastTo<HgLogQuery>(query);
 
             return _repository
                 .Log(new LogCommand()
@@ -56,12 +52,7 @@ namespace HgVersion.VCS
         /// <inheritdoc />
         public int Count(ILogQuery query)
         {
-            if (query == null)
-                throw new ArgumentNullException(nameof(query));
-
-            if (!(query is HgLogQuery hgQuery))
-                throw new InvalidOperationException($"{query.GetType()} is not supported.");
-
+            var hgQuery = CastTo<HgLogQuery>(query);
             var command = new CountCommand()
                 .WithRevision(hgQuery.Revision);
 
@@ -146,9 +137,7 @@ namespace HgVersion.VCS
         /// <inheritdoc />
         public IEnumerable<ICommit> Parents(ICommit commit)
         {
-            if (!(commit is HgCommit hgCommit))
-                throw new InvalidOperationException($"{commit.GetType()} is not supported.");
-
+            var hgCommit = CastTo<HgCommit>(commit);
             var command = new ParentsCommand()
                 .WithRevision(hgCommit);
 
@@ -202,5 +191,16 @@ namespace HgVersion.VCS
         /// <returns></returns>
         public static implicit operator HgRepository(Repository repository) =>
             new HgRepository(repository);
+
+        private static T CastTo<T>(object from)
+        {
+            if (from == null)
+                throw new ArgumentNullException(nameof(from));
+
+            if (!(from is T to))
+                throw new InvalidCastException($"{from.GetType()} is not supported.");
+
+            return to;
+        }
     }
 }
