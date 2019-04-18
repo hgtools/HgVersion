@@ -27,7 +27,7 @@ namespace HgVersion.Tests.Configuration
             fileSystem = new TestFileSystem();
             repoPath = "c:\\MyHgRepo";
         }
-        
+
         [Test]
         public void OverwritesDefaultsWithProvidedConfig()
         {
